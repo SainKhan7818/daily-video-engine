@@ -47,12 +47,12 @@ NICHES = [
         ],
     },
     {
-        "key": "trending",
-        "label": "Trending Now",
-        "prompt_topic": "a broadly trending topic or interesting fact people are curious about today",
+        "key": "nature",
+        "label": "Nature & Calm",
+        "prompt_topic": "a calming, reflective thought inspired by nature and the natural world",
         "stock_keywords": [
             "mountain landscape aerial", "ocean waves drone", "northern lights",
-            "desert dunes", "forest fog cinematic", "waterfall slow motion",
+            "desert dunes sunrise", "forest fog cinematic", "waterfall slow motion",
         ],
     },
 ]
@@ -92,20 +92,30 @@ UA = {"User-Agent": "Mozilla/5.0 (compatible; DailyVideoEngine/1.0)"}
 NICHE_QUERY = {
     "tech_ai": "artificial intelligence OR AI OR technology",
     "business": "business OR startup OR productivity OR money",
-    "trending": "trending OR viral",
 }
 
 NICHE_SUBREDDITS = {
     "tech_ai": ["technology", "artificial", "Futurology"],
     "business": ["business", "productivity", "Entrepreneur"],
-    "trending": ["todayilearned", "interestingasfuck", "Damnthatsinteresting"],
 }
 
 EVERGREEN_FALLBACK = {
     "tech_ai": "The AI feature hiding in your phone that almost nobody uses",
     "business": "The one-sentence habit that quietly makes people rich",
-    "trending": "A fact so strange your brain refuses to believe it",
+    "nature": "the quiet lesson a mountain teaches without saying a word",
 }
+
+# The nature niche narrates *about nature* so the voice matches the footage.
+NATURE_TOPICS = [
+    "the quiet power of mountains at first light",
+    "how the ocean resets a restless mind",
+    "why a forest feels like coming home",
+    "the calm that only a slow sunrise can bring",
+    "what still water teaches us about a busy mind",
+    "the patience hidden in a falling waterfall",
+    "how the night sky makes our worries feel smaller",
+    "the way wind moving through trees slows everything down",
+]
 
 
 def todays_niche():
@@ -155,13 +165,16 @@ def _reddit(subs):
 
 
 def pick_topic():
-    """Return (niche, topic_string) using the freshest trending signal available."""
+    """Return (niche, topic_string). Trending niches pull live headlines; the
+    nature niche uses calming nature themes so the voice matches the footage."""
     niche = todays_niche()
+    if niche["key"] == "nature":
+        topic = random.choice(NATURE_TOPICS)
+        print(f"[topics] Niche: {niche['label']} | Topic: {topic}")
+        return niche, topic
     pool = []
-    pool += _news(NICHE_QUERY.get(niche["key"], "trending"))
+    pool += _news(NICHE_QUERY.get(niche["key"], "technology"))
     pool += _reddit(NICHE_SUBREDDITS.get(niche["key"], []))
-    if niche["key"] == "trending":
-        pool += _google_trends()
 
     # clean + de-dupe, prefer punchy, curiosity-friendly headlines
     seen, cleaned = set(), []
@@ -230,7 +243,25 @@ Return ONLY valid JSON (no markdown fences) with these exact keys:
 
 
 def _fallback(topic, niche):
-    """Deterministic, no-API script so the pipeline never hard-fails."""
+    """Deterministic, no-API script so the pipeline never hard-fails.
+    The script is written to MATCH the footage theme for each niche."""
+    if niche["key"] == "nature":
+        script = (
+            f"Take a breath, and think about {topic}. "
+            "Out here, nothing is in a hurry, and yet everything gets done. "
+            "The mountains don't rush to rise. The river doesn't force its way to the sea. "
+            "It simply keeps moving, gently, and it always arrives. "
+            "Maybe that's the reminder we need. You don't have to do everything today. "
+            "You just have to keep going, softly, like the world around you. "
+            "Breathe in. Slow down. Follow for a calm moment like this every day."
+        )
+        return {
+            "hook": "JUST BREATHE",
+            "title": topic[:58].capitalize(),
+            "script": script,
+            "keywords": niche["stock_keywords"],
+            "hashtags": ["nature", "calm", "mindfulness", "relax", "peace", "shorts"],
+        }
     script = (
         f"Here's something worth knowing. {topic}. "
         "It sounds small, but it changes how you should think about what's coming next. "
@@ -538,6 +569,40 @@ def _probe_duration(path):
     return float(out.stdout.strip())
 
 
+def generate_ambient_music(duration, out_path, work_dir):
+    """Synthesize a soft, calming ambient pad in-code (no external files needed).
+    A gentle detuned chord with slow breathing tremolo and long fades — sits
+    quietly under narration."""
+    import wave as wavmod
+    sr = 44100
+    n = int(duration * sr)
+    t = np.linspace(0, duration, n, endpoint=False).astype(np.float32)
+    freqs = [110.0, 164.81, 220.0, 277.18]      # A2, E3, A3, C#4 — warm major
+    audio = np.zeros(n, dtype=np.float32)
+    for i, f in enumerate(freqs):
+        detune = 1.0 + 0.0015 * (i - 1.5)
+        vib = 1.0 + 0.002 * np.sin(2 * np.pi * 0.07 * t + i)
+        wave = np.sin(2 * np.pi * f * detune * vib * t)
+        wave += 0.22 * np.sin(2 * np.pi * 2 * f * detune * t)   # soft harmonic
+        trem = 0.6 + 0.4 * np.sin(2 * np.pi * 0.05 * t + i * 1.3)
+        audio += (wave * trem) * (0.9 - 0.12 * i)
+    audio /= (np.max(np.abs(audio)) + 1e-9)
+    fade = int(sr * 2.0)
+    env = np.ones(n, dtype=np.float32)
+    if n > 2 * fade:
+        env[:fade] = np.linspace(0, 1, fade)
+        env[-fade:] = np.linspace(1, 0, fade)
+    audio = (audio * env * 0.5).astype(np.float32)
+    wav_path = os.path.join(work_dir, "ambient.wav")
+    pcm = (audio * 32767).astype(np.int16)
+    with wavmod.open(wav_path, "w") as wf:
+        wf.setnchannels(1); wf.setsampwidth(2); wf.setframerate(sr)
+        wf.writeframes(pcm.tobytes())
+    _run(["ffmpeg", "-y", "-i", wav_path, "-b:a", "160k", out_path])
+    print(f"[music] Generated soft ambient bed ({duration:.0f}s).")
+    return out_path
+
+
 def _make_scrim(work_dir):
     W, H = WIDTH, HEIGHT
     alpha = np.zeros(H, dtype=np.float32)
@@ -693,8 +758,9 @@ def run():
     # 4) visuals
     assets = get_visuals(content["keywords"], work_dir)
 
-    # 5) background music (optional; picked from ./music if present)
-    music_path = pick_music()
+    # 5) background music — a soft ambient bed sized to the voiceover length
+    vdur = _probe_duration(mp3_path)
+    music_path = pick_music(work_dir, vdur)
 
     # 6) assemble
     out_path = os.path.join(day_dir, f"video_{stamp}.mp4")
@@ -725,16 +791,20 @@ def voice_step(script_text, work_dir):
     return make_voiceover(script_text, work_dir)
 
 
-def pick_music():
-    """Pick a random track from ./music (CC0 background tracks), if any exist."""
+def pick_music(work_dir, duration):
+    """Use a CC0 track from ./music if present, else generate a soft ambient bed."""
     import glob
     import random
     music_dir = os.path.join(BASE_DIR, "music")
     tracks = glob.glob(os.path.join(music_dir, "*.mp3"))
-    if not tracks:
-        print("[music] No tracks in ./music; video will use voice only.")
+    if tracks:
+        return random.choice(tracks)
+    out = os.path.join(work_dir, "ambient.mp3")
+    try:
+        return generate_ambient_music(duration, out, work_dir)
+    except Exception as e:  # noqa: BLE001
+        print(f"[music] ambient generation failed ({e}); voice only.")
         return None
-    return random.choice(tracks)
 
 
 if __name__ == "__main__":
