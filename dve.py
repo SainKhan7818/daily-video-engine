@@ -26,33 +26,46 @@ FONT_SIZE = 64
 
 # --- Niche rotation (Tech/AI, Business/productivity, General trending) ---
 # The engine rotates through these by day-of-year so the feed stays varied.
+# --- FITNESS channel: rotates daily across gym, free weights, cardio, motivation.
 NICHES = [
     {
-        "key": "tech_ai",
-        "label": "Tech & AI",
-        "prompt_topic": "the latest trending development in technology and artificial intelligence",
-        # cinematic, techy, visually rich fallback keywords
+        "key": "gym_strength",
+        "label": "Gym & Strength",
+        "prompt_topic": "a powerful gym strength-training tip or lesson",
         "stock_keywords": [
-            "futuristic technology", "data center", "neon city night",
-            "circuit board macro", "robot", "drone aerial city",
+            "man lifting heavy barbell gym", "deadlift barbell close up",
+            "squat rack workout", "muscular athlete training gym",
+            "bench press gym", "weightlifting chalk hands",
         ],
     },
     {
-        "key": "business",
-        "label": "Business & Productivity",
-        "prompt_topic": "a trending business, career, or productivity idea people are talking about",
+        "key": "free_weights",
+        "label": "Free Weights",
+        "prompt_topic": "a free-weight (dumbbell/kettlebell) training tip",
         "stock_keywords": [
-            "city skyline aerial", "modern office glass", "stock market screen",
-            "sunrise skyscraper", "team working", "highway timelapse",
+            "dumbbell workout close up", "kettlebell swing gym",
+            "bicep curl dumbbell", "woman lifting dumbbells",
+            "gym dumbbell rack", "shoulder press dumbbell",
         ],
     },
     {
-        "key": "nature",
-        "label": "Nature & Calm",
-        "prompt_topic": "a calming, reflective thought inspired by nature and the natural world",
+        "key": "cardio",
+        "label": "Cardio",
+        "prompt_topic": "a smart cardio or fat-loss training tip",
         "stock_keywords": [
-            "mountain landscape aerial", "ocean waves drone", "northern lights",
-            "desert dunes sunrise", "forest fog cinematic", "waterfall slow motion",
+            "athlete running track sunrise", "sprinting outdoor slow motion",
+            "treadmill running gym", "jump rope workout", "cycling indoor gym",
+            "hiit workout intense",
+        ],
+    },
+    {
+        "key": "fitness_motivation",
+        "label": "Fitness Motivation",
+        "prompt_topic": "a hard-hitting fitness motivation message about discipline and consistency",
+        "stock_keywords": [
+            "athlete training sunrise silhouette", "gym motivation intense workout",
+            "runner determination close up", "sweat dripping workout close up",
+            "boxer training heavy bag", "fitness discipline dark gym",
         ],
     },
 ]
@@ -68,54 +81,52 @@ OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 #   en-US-AndrewMultilingualNeural- confident male, great for tech
 #   en-US-EmmaMultilingualNeural  - friendly, upbeat
 #   en-US-AriaNeural / en-US-GuyNeural - reliable classics
-TTS_VOICE = "en-US-AvaMultilingualNeural"
-TTS_RATE = "+6%"    # a touch faster keeps shorts punchy
+TTS_VOICE = "en-US-AndrewMultilingualNeural"   # confident, energetic — suits fitness
+TTS_RATE = "+8%"    # punchy pace for motivation
 TTS_PITCH = "+0Hz"
 # ===== topics =====
-"""Find what's actually trending *today* across platforms, then hand the
-strongest, most curiosity-provoking topic to the scriptwriter.
+"""Pick the day's fitness niche and a specific on-theme topic.
 
-Sources (all free, no keys), tried in order and pooled:
-  1. Google Trends daily trending searches (what people are Googling now)
-  2. YouTube trending-style search feed for the niche (via Google News as proxy)
-  3. Reddit hot posts for the niche subreddits (what's blowing up socially)
-  4. Google News headlines for the niche
-
-Everything is defensive: if a source is unreachable the engine still produces
-a video from whatever it did find, or an evergreen seed.
+The channel rotates daily across Gym & Strength, Free Weights, Cardio, and
+Fitness Motivation. Topics are curated per category so the narration always
+matches the footage (no random headlines).
 """
 
 
-
-UA = {"User-Agent": "Mozilla/5.0 (compatible; DailyVideoEngine/1.0)"}
-
-NICHE_QUERY = {
-    "tech_ai": "artificial intelligence OR AI OR technology",
-    "business": "business OR startup OR productivity OR money",
+FITNESS_TOPICS = {
+    "gym_strength": [
+        "why progressive overload is the only rule that really builds muscle",
+        "the compound lifts that give you 90 percent of the results",
+        "why your last two reps matter more than the first ten",
+        "the rest-time mistake that's stalling your strength",
+        "why lifting heavy is the fastest way to change your body",
+        "the one form cue that makes every lift safer and stronger",
+    ],
+    "free_weights": [
+        "why dumbbells build more balanced muscle than machines",
+        "the kettlebell swing that trains your whole body at once",
+        "why unilateral training fixes your weak side fast",
+        "the dumbbell mistake that's robbing your gains",
+        "why free weights force your core to work on every rep",
+        "the simple tempo trick that doubles the burn",
+    ],
+    "cardio": [
+        "why zone-two cardio burns fat without killing your gains",
+        "the truth about fasted cardio nobody tells you",
+        "why HIIT beats hours on the treadmill",
+        "the reason steady runs make you a better lifter",
+        "why your heart rate is the number that actually matters",
+        "the 12-minute cardio finisher that torches calories",
+    ],
+    "fitness_motivation": [
+        "why discipline beats motivation every single day",
+        "the reason showing up on the bad days changes everything",
+        "why the body you want is built by boring consistency",
+        "the mindset shift that makes quitting impossible",
+        "why nobody is coming to save you, and that's your power",
+        "the one percent you improve today compounds into everything",
+    ],
 }
-
-NICHE_SUBREDDITS = {
-    "tech_ai": ["technology", "artificial", "Futurology"],
-    "business": ["business", "productivity", "Entrepreneur"],
-}
-
-EVERGREEN_FALLBACK = {
-    "tech_ai": "The AI feature hiding in your phone that almost nobody uses",
-    "business": "The one-sentence habit that quietly makes people rich",
-    "nature": "the quiet lesson a mountain teaches without saying a word",
-}
-
-# The nature niche narrates *about nature* so the voice matches the footage.
-NATURE_TOPICS = [
-    "the quiet power of mountains at first light",
-    "how the ocean resets a restless mind",
-    "why a forest feels like coming home",
-    "the calm that only a slow sunrise can bring",
-    "what still water teaches us about a busy mind",
-    "the patience hidden in a falling waterfall",
-    "how the night sky makes our worries feel smaller",
-    "the way wind moving through trees slows everything down",
-]
 
 
 def todays_niche():
@@ -123,69 +134,11 @@ def todays_niche():
     return NICHES[doy % len(NICHES)]
 
 
-def _google_trends():
-    url = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=US"
-    try:
-        r = requests.get(url, headers=UA, timeout=15)
-        r.raise_for_status()
-        root = ET.fromstring(r.content)
-        return [i.findtext("title", "").strip() for i in root.iter("item")][:10]
-    except Exception as e:  # noqa: BLE001
-        print(f"[topics] google trends failed: {e}")
-        return []
-
-
-def _news(query):
-    url = ("https://news.google.com/rss/search?q=" + urllib.parse.quote(query)
-           + "&hl=en-US&gl=US&ceid=US:en")
-    try:
-        r = requests.get(url, headers=UA, timeout=15)
-        r.raise_for_status()
-        root = ET.fromstring(r.content)
-        return [i.findtext("title", "").strip() for i in root.iter("item")][:10]
-    except Exception as e:  # noqa: BLE001
-        print(f"[topics] news failed: {e}")
-        return []
-
-
-def _reddit(subs):
-    titles = []
-    for sub in subs:
-        try:
-            r = requests.get(f"https://www.reddit.com/r/{sub}/hot.json?limit=8",
-                             headers=UA, timeout=15)
-            r.raise_for_status()
-            for child in r.json().get("data", {}).get("children", []):
-                d = child.get("data", {})
-                if not d.get("stickied") and d.get("title"):
-                    titles.append(d["title"].strip())
-        except Exception as e:  # noqa: BLE001
-            print(f"[topics] reddit r/{sub} failed: {e}")
-    return titles[:12]
-
-
 def pick_topic():
-    """Return (niche, topic_string). Trending niches pull live headlines; the
-    nature niche uses calming nature themes so the voice matches the footage."""
+    """Return (niche, topic_string) — a curated, on-theme fitness topic."""
     niche = todays_niche()
-    if niche["key"] == "nature":
-        topic = random.choice(NATURE_TOPICS)
-        print(f"[topics] Niche: {niche['label']} | Topic: {topic}")
-        return niche, topic
-    pool = []
-    pool += _news(NICHE_QUERY.get(niche["key"], "technology"))
-    pool += _reddit(NICHE_SUBREDDITS.get(niche["key"], []))
-
-    # clean + de-dupe, prefer punchy, curiosity-friendly headlines
-    seen, cleaned = set(), []
-    for t in pool:
-        t = t.split(" - ")[0].strip()      # strip trailing " - Publisher"
-        if 15 <= len(t) <= 120 and t.lower() not in seen:
-            seen.add(t.lower())
-            cleaned.append(t)
-
-    topic = random.choice(cleaned[:12]) if cleaned else EVERGREEN_FALLBACK[niche["key"]]
-    print(f"[topics] Niche: {niche['label']} | Pool: {len(cleaned)} | Topic: {topic}")
+    topic = random.choice(FITNESS_TOPICS.get(niche["key"], FITNESS_TOPICS["fitness_motivation"]))
+    print(f"[topics] Niche: {niche['label']} | Topic: {topic}")
     return niche, topic
 # ===== script_gen =====
 """Turn the day's topic into a tight ~40-second narration script.
@@ -242,40 +195,39 @@ Return ONLY valid JSON (no markdown fences) with these exact keys:
 }}"""
 
 
+FITNESS_HOOKS = {
+    "gym_strength": "STOP TRAINING WRONG",
+    "free_weights": "GRAB THE DUMBBELLS",
+    "cardio": "BURN FAT SMARTER",
+    "fitness_motivation": "NO EXCUSES",
+}
+
+FITNESS_HASHTAGS = {
+    "gym_strength": ["gym", "strength", "workout", "fitness", "gymmotivation", "shorts"],
+    "free_weights": ["dumbbells", "freeweights", "gym", "workout", "fitness", "shorts"],
+    "cardio": ["cardio", "fatloss", "hiit", "running", "fitness", "shorts"],
+    "fitness_motivation": ["motivation", "discipline", "gym", "fitness", "mindset", "shorts"],
+}
+
+
 def _fallback(topic, niche):
-    """Deterministic, no-API script so the pipeline never hard-fails.
-    The script is written to MATCH the footage theme for each niche."""
-    if niche["key"] == "nature":
-        script = (
-            f"Take a breath, and think about {topic}. "
-            "Out here, nothing is in a hurry, and yet everything gets done. "
-            "The mountains don't rush to rise. The river doesn't force its way to the sea. "
-            "It simply keeps moving, gently, and it always arrives. "
-            "Maybe that's the reminder we need. You don't have to do everything today. "
-            "You just have to keep going, softly, like the world around you. "
-            "Breathe in. Slow down. Follow for a calm moment like this every day."
-        )
-        return {
-            "hook": "JUST BREATHE",
-            "title": topic[:58].capitalize(),
-            "script": script,
-            "keywords": niche["stock_keywords"],
-            "hashtags": ["nature", "calm", "mindfulness", "relax", "peace", "shorts"],
-        }
+    """Deterministic, no-API fitness script — punchy, motivating, on-theme."""
+    key = niche["key"]
     script = (
-        f"Here's something worth knowing. {topic}. "
-        "It sounds small, but it changes how you should think about what's coming next. "
-        "The people who notice these shifts early are the ones who stay ahead, "
-        "while everyone else is still catching up. "
-        "So keep your eyes open, stay curious, and don't wait for permission to learn. "
+        f"Listen up, because {topic}. "
+        "Most people train hard but never train smart, and that's why they stay stuck. "
+        "Here's the truth: your body only changes when you give it a reason to. "
+        "Show up, push past the rep that scares you, and stay consistent when it's boring. "
+        "That's it. That's the whole secret nobody wants to hear. "
+        "So stop scrolling, go move your body, and prove to yourself you can. "
         "Follow for one of these every single day."
     )
     return {
-        "hook": "WAIT FOR IT",
-        "title": topic[:58],
+        "hook": FITNESS_HOOKS.get(key, "NO EXCUSES"),
+        "title": topic[:58].capitalize(),
         "script": script,
         "keywords": niche["stock_keywords"],
-        "hashtags": ["shorts", "reels", niche["key"], "trending", "learn"],
+        "hashtags": FITNESS_HASHTAGS.get(key, ["fitness", "gym", "workout", "shorts"]),
     }
 
 
