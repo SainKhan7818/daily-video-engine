@@ -26,47 +26,64 @@ FONT_SIZE = 64
 
 # --- Niche rotation (Tech/AI, Business/productivity, General trending) ---
 # The engine rotates through these by day-of-year so the feed stays varied.
-# --- FITNESS channel: rotates daily across gym, free weights, cardio, motivation.
-NICHES = [
+# --- FITNESS channel: a 7-day body-part split, two parts per day.
+#   Part 1 posts in the morning, Part 2 in the evening (same body part).
+#   Indexed by Python weekday(): Mon=0 ... Sun=6.
+BODY_PARTS = [
     {
-        "key": "gym_strength",
-        "label": "Gym & Strength",
-        "prompt_topic": "a powerful gym strength-training tip or lesson",
-        "stock_keywords": [
-            "man lifting heavy barbell gym", "deadlift barbell close up",
-            "squat rack workout", "muscular athlete training gym",
-            "bench press gym", "weightlifting chalk hands",
-        ],
+        "key": "chest", "label": "Chest Day", "emoji": "\U0001F4AA",
+        "stock_keywords": ["bench press gym close up", "push up workout",
+            "incline dumbbell press", "chest workout gym", "cable chest fly",
+            "muscular chest training"],
+        "p1_topic": "the two pressing moves that build a bigger chest",
+        "p2_topic": "the chest finisher and the mistake killing your gains",
     },
     {
-        "key": "free_weights",
-        "label": "Free Weights",
-        "prompt_topic": "a free-weight (dumbbell/kettlebell) training tip",
-        "stock_keywords": [
-            "dumbbell workout close up", "kettlebell swing gym",
-            "bicep curl dumbbell", "woman lifting dumbbells",
-            "gym dumbbell rack", "shoulder press dumbbell",
-        ],
+        "key": "back", "label": "Back Day", "emoji": "\U0001F53B",
+        "stock_keywords": ["pull up bar workout", "lat pulldown gym",
+            "barbell row close up", "deadlift back muscles", "back workout gym",
+            "seated cable row"],
+        "p1_topic": "the pulls that build a wide, strong back",
+        "p2_topic": "the back mistake most lifters never fix",
     },
     {
-        "key": "cardio",
-        "label": "Cardio",
-        "prompt_topic": "a smart cardio or fat-loss training tip",
-        "stock_keywords": [
-            "athlete running track sunrise", "sprinting outdoor slow motion",
-            "treadmill running gym", "jump rope workout", "cycling indoor gym",
-            "hiit workout intense",
-        ],
+        "key": "legs", "label": "Leg Day", "emoji": "\U0001F9B5",
+        "stock_keywords": ["barbell squat gym", "leg press machine",
+            "walking lunges gym", "leg workout quads", "calf raise",
+            "athlete squatting heavy"],
+        "p1_topic": "why leg day is the one day you can't skip",
+        "p2_topic": "the leg finisher that builds real size",
     },
     {
-        "key": "fitness_motivation",
-        "label": "Fitness Motivation",
-        "prompt_topic": "a hard-hitting fitness motivation message about discipline and consistency",
-        "stock_keywords": [
-            "athlete training sunrise silhouette", "gym motivation intense workout",
-            "runner determination close up", "sweat dripping workout close up",
-            "boxer training heavy bag", "fitness discipline dark gym",
-        ],
+        "key": "shoulders", "label": "Shoulder Day", "emoji": "\U0001F3CB",
+        "stock_keywords": ["overhead press barbell", "lateral raise dumbbell",
+            "shoulder workout gym", "arnold press dumbbell", "front raise gym",
+            "muscular shoulders training"],
+        "p1_topic": "the press and raise that build boulder shoulders",
+        "p2_topic": "the shoulder detail almost everyone gets wrong",
+    },
+    {
+        "key": "arms", "label": "Arm Day", "emoji": "\U0001F4AA",
+        "stock_keywords": ["bicep curl dumbbell close up", "tricep pushdown cable",
+            "barbell curl gym", "arm workout veins", "hammer curl dumbbell",
+            "flexing arm muscle"],
+        "p1_topic": "the curl and extension combo for bigger arms",
+        "p2_topic": "the arm-pump finisher to end the week strong",
+    },
+    {
+        "key": "core", "label": "Core Day", "emoji": "\U0001F525",
+        "stock_keywords": ["abs workout gym", "plank exercise", "hanging leg raise",
+            "core training athlete", "cable crunch", "six pack abs close up"],
+        "p1_topic": "the core moves that actually reveal your abs",
+        "p2_topic": "why abs are built in the kitchen just as much as the gym",
+    },
+    {
+        "key": "fullbody", "label": "Full-Body & Cardio", "emoji": "\U000026A1",
+        "stock_keywords": ["full body workout gym", "hiit training intense",
+            "athlete running track", "functional training rope", "burpees workout",
+            "sweat dripping cardio"],
+        "p1_topic": "the full-body reset that starts your week right",
+        "p2_topic": "the cardio finish that protects your hard-earned muscle",
     },
 ]
 
@@ -85,190 +102,96 @@ TTS_VOICE = "en-US-AndrewMultilingualNeural"   # confident, energetic — suits 
 TTS_RATE = "+8%"    # punchy pace for motivation
 TTS_PITCH = "+0Hz"
 # ===== topics =====
-"""Pick the day's fitness niche and a specific on-theme topic.
-
-The channel rotates daily across Gym & Strength, Free Weights, Cardio, and
-Fitness Motivation. Topics are curated per category so the narration always
-matches the footage (no random headlines).
-"""
+"""Pick today's body part (7-day split) and which part (1 = morning, 2 = evening)."""
 
 
-FITNESS_TOPICS = {
-    "gym_strength": [
-        "why progressive overload is the only rule that really builds muscle",
-        "the compound lifts that give you 90 percent of the results",
-        "why your last two reps matter more than the first ten",
-        "the rest-time mistake that's stalling your strength",
-        "why lifting heavy is the fastest way to change your body",
-        "the one form cue that makes every lift safer and stronger",
-    ],
-    "free_weights": [
-        "why dumbbells build more balanced muscle than machines",
-        "the kettlebell swing that trains your whole body at once",
-        "why unilateral training fixes your weak side fast",
-        "the dumbbell mistake that's robbing your gains",
-        "why free weights force your core to work on every rep",
-        "the simple tempo trick that doubles the burn",
-    ],
-    "cardio": [
-        "why zone-two cardio burns fat without killing your gains",
-        "the truth about fasted cardio nobody tells you",
-        "why HIIT beats hours on the treadmill",
-        "the reason steady runs make you a better lifter",
-        "why your heart rate is the number that actually matters",
-        "the 12-minute cardio finisher that torches calories",
-    ],
-    "fitness_motivation": [
-        "why discipline beats motivation every single day",
-        "the reason showing up on the bad days changes everything",
-        "why the body you want is built by boring consistency",
-        "the mindset shift that makes quitting impossible",
-        "why nobody is coming to save you, and that's your power",
-        "the one percent you improve today compounds into everything",
-    ],
-}
+
+def todays_bodypart():
+    wd = datetime.date.today().weekday()   # Mon=0 ... Sun=6
+    return BODY_PARTS[wd % len(BODY_PARTS)]
 
 
-def todays_niche():
-    doy = datetime.date.today().timetuple().tm_yday
-    return NICHES[doy % len(NICHES)]
+def current_part():
+    """Part 1 in the morning, Part 2 in the evening.
+    Controlled by env VIDEO_PART if set (workflow), else derived from UTC hour."""
+    env = os.environ.get("VIDEO_PART", "").strip()
+    if env in ("1", "2"):
+        return int(env)
+    hour = datetime.datetime.utcnow().hour
+    return 1 if hour < 11 else 2   # <11:00 UTC = morning IST, else evening
 
 
 def pick_topic():
-    """Return (niche, topic_string) — a curated, on-theme fitness topic."""
-    niche = todays_niche()
-    topic = random.choice(FITNESS_TOPICS.get(niche["key"], FITNESS_TOPICS["fitness_motivation"]))
-    print(f"[topics] Niche: {niche['label']} | Topic: {topic}")
-    return niche, topic
+    """Return (bodypart, part, topic_string)."""
+    bp = todays_bodypart()
+    part = current_part()
+    topic = bp["p1_topic"] if part == 1 else bp["p2_topic"]
+    print(f"[topics] {bp['label']} | Part {part} | Topic: {topic}")
+    return bp, part, topic
 # ===== script_gen =====
-"""Turn the day's topic into a tight ~40-second narration script.
+"""Build the fitness script + SEO metadata for a given body part and part number.
 
-Primary path: Google Gemini (free tier). If no key is set or the call fails,
-fall back to a clean template so a video is still produced.
-
-Returns a dict:
-  {
-    "title":   short video title (for YouTube/Reel caption),
-    "script":  the narration text (what the voice reads),
-    "keywords": list of visual search keywords for stock footage,
-    "hashtags": list of hashtags for the post caption,
-  }
+Deterministic (no API key needed). Returns a dict with:
+  hook, title, script, description, keywords, hashtags, tags
+All tuned for reach: strong hook, retention CTA that drives viewers to the
+other part, and platform-ready title/description/hashtags.
 """
 
+BASE_TAGS = ["gym", "fitness", "workout", "gymtok", "fitfam", "bodybuilding",
+             "gymmotivation", "fitnessmotivation", "training", "shorts", "reels"]
 
 
-GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.0-flash:generateContent"
-)
-
-PROMPT_TEMPLATE = """You are a world-class short-form scriptwriter behind viral YouTube Shorts and
-Instagram Reels that routinely hit millions of views. You understand retention:
-the first second decides everything.
-
-Today's trending topic ({niche_label}): "{topic}"
-
-Write a scroll-stopping ~38 second voiceover script (about 90-105 words).
-Non-negotiable rules for maximum retention:
-- FIRST LINE is a pattern-interrupt hook: a bold claim, a shocking number, or a
-  "you've been doing X wrong" — something that makes scrolling feel like a mistake.
-- Then open a curiosity gap and don't fully close it until near the end.
-- Short, punchy, spoken-word sentences. Energy and momentum. No fluff, no
-  "welcome back", no emojis, no stage directions — only the words to be spoken.
-- Land one genuinely surprising insight people will want to share.
-- End with a confident one-line CTA to follow for more.
-
-Also give a "hook": a 3-6 word ALL-CAPS on-screen title-card line (the first thing
-the viewer reads) that amplifies the hook. Punchy and bold.
-
-For "keywords", give 5-6 CINEMATIC, visually rich stock-footage search terms that
-look stunning full-screen — aerial landscapes, futuristic tech, glowing city nights,
-drone shots, nature, macro detail. Concrete beautiful shots, never abstract words.
-
-Return ONLY valid JSON (no markdown fences) with these exact keys:
-{{
-  "hook": "3-6 WORD ON-SCREEN TITLE",
-  "title": "a catchy <60 char title",
-  "script": "the voiceover text",
-  "keywords": ["5-6 cinematic visual search terms for stock footage"],
-  "hashtags": ["5-8 relevant hashtags without the # symbol"]
-}}"""
-
-
-FITNESS_HOOKS = {
-    "gym_strength": "STOP TRAINING WRONG",
-    "free_weights": "GRAB THE DUMBBELLS",
-    "cardio": "BURN FAT SMARTER",
-    "fitness_motivation": "NO EXCUSES",
-}
-
-FITNESS_HASHTAGS = {
-    "gym_strength": ["gym", "strength", "workout", "fitness", "gymmotivation", "shorts"],
-    "free_weights": ["dumbbells", "freeweights", "gym", "workout", "fitness", "shorts"],
-    "cardio": ["cardio", "fatloss", "hiit", "running", "fitness", "shorts"],
-    "fitness_motivation": ["motivation", "discipline", "gym", "fitness", "mindset", "shorts"],
-}
-
-
-def _fallback(topic, niche):
-    """Deterministic, no-API fitness script — punchy, motivating, on-theme."""
-    key = niche["key"]
-    script = (
-        f"Listen up, because {topic}. "
-        "Most people train hard but never train smart, and that's why they stay stuck. "
-        "Here's the truth: your body only changes when you give it a reason to. "
-        "Show up, push past the rep that scares you, and stay consistent when it's boring. "
-        "That's it. That's the whole secret nobody wants to hear. "
-        "So stop scrolling, go move your body, and prove to yourself you can. "
-        "Follow for one of these every single day."
-    )
-    return {
-        "hook": FITNESS_HOOKS.get(key, "NO EXCUSES"),
-        "title": topic[:58].capitalize(),
-        "script": script,
-        "keywords": niche["stock_keywords"],
-        "hashtags": FITNESS_HASHTAGS.get(key, ["fitness", "gym", "workout", "shorts"]),
-    }
-
-
-def _extract_json(text):
-    """Pull the JSON object out of a model response that may have stray text."""
-    text = text.strip()
-    text = re.sub(r"^```(json)?", "", text).strip()
-    text = re.sub(r"```$", "", text).strip()
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if match:
-        return json.loads(match.group(0))
-    return json.loads(text)
-
-
-def generate(topic, niche):
-    if not GEMINI_API_KEY:
-        print("[script] No GEMINI_API_KEY set; using template fallback.")
-        return _fallback(topic, niche)
-
-    prompt = PROMPT_TEMPLATE.format(niche_label=niche["label"], topic=topic)
-    try:
-        resp = requests.post(
-            GEMINI_URL,
-            params={"key": GEMINI_API_KEY},
-            json={"contents": [{"parts": [{"text": prompt}]}]},
-            timeout=45,
+def _script(topic, bp, part):
+    label = bp["label"]
+    if part == 1:
+        return (
+            f"It's {label}, and here's what most people get wrong. "
+            f"Today, {topic}. "
+            "Start with the big compound movement while you're fresh and strong. "
+            "Control the weight down, drive it up with power, and leave one or two reps in the tank. "
+            "That's how you build muscle without burning out or getting hurt. "
+            "Do this right and you'll feel it working in the first week. "
+            "Part two drops tonight with the finisher, so follow now and don't miss it."
         )
-        resp.raise_for_status()
-        data = resp.json()
-        text = data["candidates"][0]["content"]["parts"][0]["text"]
-        result = _extract_json(text)
-        # sanity-check required keys
-        for k in ("title", "script", "keywords", "hashtags"):
-            if k not in result:
-                raise ValueError(f"missing key {k}")
-        result.setdefault("hook", result["title"][:24].upper())
-        print(f"[script] Gemini script ready: {result['title']}")
-        return result
-    except Exception as e:  # noqa: BLE001
-        print(f"[script] Gemini failed ({e}); using template fallback.")
-        return _fallback(topic, niche)
+    return (
+        f"Welcome back to {label}, part two. "
+        f"If you caught part one, you're ready for this: {topic}. "
+        "Finish with higher reps and a real mind-muscle connection. "
+        "Slow the tempo, squeeze hard at the top, and chase the pump on your last sets. "
+        "This is the part that separates the people who look like they train from the ones who don't. "
+        "Missed part one? It's on the profile. New body part tomorrow, so hit follow and let's build."
+    )
+
+
+def generate(topic, bp, part):
+    label = bp["label"]
+    emoji = bp.get("emoji", "\U0001F4AA")
+    script = _script(topic, bp, part)
+
+    hook = f"{label.upper()} — PART {part}"
+    title = f"{label} {emoji} Part {part} | {topic[:40].strip().capitalize()} #shorts #gym"
+    hashtags = [bp["key"], "gym", "fitness", "workout", "gymmotivation",
+                "fitfam", "bodybuilding", "shorts", "reels", "fyp"]
+    tag_line = " ".join("#" + h for h in hashtags)
+    description = (
+        f"{label} — Part {part}. {topic.capitalize()}.\n\n"
+        f"{script}\n\n"
+        f"New body part every day. Part 1 in the morning, Part 2 at night. "
+        f"Follow for your daily workout.\n\n{tag_line}"
+    )
+    tags = list(dict.fromkeys([bp["key"], label.lower(), "workout", "gym tips",
+                               "fitness motivation"] + BASE_TAGS))
+
+    print(f"[script] {label} Part {part} | title: {title[:50]}...")
+    return {
+        "hook": hook,
+        "title": title,
+        "script": script,
+        "description": description,
+        "keywords": bp["stock_keywords"],
+        "hashtags": hashtags,
+        "tags": tags,
+    }
 # ===== captions =====
 """Build animated, word-by-word captions in ASS format ("Hormozi" style).
 
@@ -696,11 +619,11 @@ def run():
     work_dir = os.path.join(day_dir, "work")
     os.makedirs(work_dir, exist_ok=True)
 
-    # 1) topic
-    niche, topic = pick_topic()
+    # 1) today's body part + which part (1=morning, 2=evening)
+    bodypart, part, topic = pick_topic()
 
-    # 2) script
-    content = generate(topic, niche)
+    # 2) script + SEO metadata
+    content = generate(topic, bodypart, part)
 
     # 3) voiceover (+ real word timings) and animated captions
     mp3_path, words = voice_step(content["script"], work_dir)
@@ -714,23 +637,24 @@ def run():
     vdur = _probe_duration(mp3_path)
     music_path = pick_music(work_dir, vdur)
 
-    # 6) assemble
-    out_path = os.path.join(day_dir, f"video_{stamp}.mp4")
+    # 6) assemble (part-tagged filename so morning & evening don't clash)
+    out_path = os.path.join(day_dir, f"video_{stamp}_part{part}.mp4")
     build_video(assets, mp3_path, ass_path, out_path, work_dir,
                          music_path=music_path)
 
-    # 6) metadata for the uploaders
-    hashtags = " ".join(f"#{h.lstrip('#')}" for h in content["hashtags"])
+    # 7) SEO metadata for the uploaders (title, description, hashtags, tags)
     meta = {
         "date": stamp,
-        "niche": niche["label"],
+        "body_part": bodypart["label"],
+        "part": part,
         "topic": topic,
         "title": content["title"],
-        "description": f"{content['script']}\n\n{hashtags}",
+        "description": content["description"],
         "hashtags": content["hashtags"],
+        "tags": content["tags"],
         "video_path": out_path,
     }
-    meta_path = os.path.join(day_dir, "meta.json")
+    meta_path = os.path.join(day_dir, f"meta_part{part}.json")
     with open(meta_path, "w") as f:
         json.dump(meta, f, indent=2)
 
