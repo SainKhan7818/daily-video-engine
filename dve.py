@@ -659,7 +659,67 @@ def run():
         json.dump(meta, f, indent=2)
 
     print(f"\n[main] Done. Video: {out_path}\n[main] Meta: {meta_path}")
+
+    # 8) auto-post to YouTube (only if the 3 YT secrets are set; skips silently otherwise)
+    try:
+        upload_youtube(out_path, meta)
+    except Exception as e:  # noqa: BLE001
+        print(f"[youtube] upload failed ({e}); video still saved as an artifact.")
+
     return meta
+
+
+def upload_youtube(video_path, meta):
+    """Upload the finished video to YouTube as a public Short.
+    Needs GitHub Secrets: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN.
+    If any is missing, it skips quietly so the run still succeeds."""
+    cid = os.environ.get("YT_CLIENT_ID", "").strip()
+    csec = os.environ.get("YT_CLIENT_SECRET", "").strip()
+    rtok = os.environ.get("YT_REFRESH_TOKEN", "").strip()
+    if not (cid and csec and rtok):
+        print("[youtube] YT secrets not set - skipping upload (video kept as artifact).")
+        return None
+
+    from google.oauth2.credentials import Credentials
+    from googleapiclient.discovery import build
+    from googleapiclient.http import MediaFileUpload
+
+    creds = Credentials(
+        token=None,
+        refresh_token=rtok,
+        client_id=cid,
+        client_secret=csec,
+        token_uri="https://oauth2.googleapis.com/token",
+        scopes=["https://www.googleapis.com/auth/youtube.upload"],
+    )
+    youtube = build("youtube", "v3", credentials=creds, cache_discovery=False)
+
+    title = meta["title"][:100]
+    desc = meta["description"][:4900]
+    if "#shorts" not in desc.lower():
+        desc = desc + "\n\n#Shorts"
+    tags = meta.get("tags", [])[:15]
+
+    body = {
+        "snippet": {
+            "title": title,
+            "description": desc,
+            "tags": tags,
+            "categoryId": "17",  # Sports
+        },
+        "status": {
+            "privacyStatus": "public",
+            "selfDeclaredMadeForKids": False,
+        },
+    }
+    media = MediaFileUpload(video_path, chunksize=-1, resumable=True,
+                            mimetype="video/mp4")
+    print(f"[youtube] uploading '{title[:50]}'...")
+    req = youtube.videos().insert(part="snippet,status", body=body, media_body=media)
+    resp = req.execute()
+    vid = resp.get("id")
+    print(f"[youtube] DONE -> https://youtube.com/shorts/{vid}")
+    return vid
 
 
 def voice_step(script_text, work_dir):
