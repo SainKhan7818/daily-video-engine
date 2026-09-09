@@ -1,7 +1,7 @@
 name: Daily Video
 
 on:
-  workflow_dispatch:            # manual run — pick the part
+  workflow_dispatch:
     inputs:
       part:
         description: "Which part (1 = morning, 2 = evening)"
@@ -9,8 +9,8 @@ on:
         options: ["1", "2"]
         default: "1"
   schedule:
-    - cron: "30 3 * * *"        # 03:30 UTC = 09:00 IST -> Part 1 (morning)
-    - cron: "30 15 * * *"       # 15:30 UTC = 21:00 IST -> Part 2 (evening)
+    - cron: "30 3 * * *"
+    - cron: "30 15 * * *"
 
 concurrency:
   group: daily-video-${{ github.event.schedule || github.run_id }}
@@ -31,13 +31,16 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
 
       - name: Install Python deps
-        run: pip install edge-tts requests numpy Pillow
+        run: pip install edge-tts requests numpy Pillow google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
 
-      - name: Generate the video
+      - name: Generate the video + auto-post to YouTube
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
-          VIDEO_PART: ${{ github.event.inputs.part }}   # empty on schedule -> derived from time
+          VIDEO_PART: ${{ github.event.inputs.part }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
         run: python dve.py
 
       - name: Upload the finished video (only the final file)
