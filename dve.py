@@ -1352,6 +1352,9 @@ def upload_youtube(video_path, meta):
             "description": desc,
             "tags": tags,
             "categoryId": category_id,
+            # Declare the spoken language so YouTube can auto-generate dubs.
+            "defaultLanguage": "en",
+            "defaultAudioLanguage": "en",
         },
         "status": {
             "privacyStatus": "public",
