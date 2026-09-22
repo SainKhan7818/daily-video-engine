@@ -693,7 +693,7 @@ CATEGORY_HASHTAGS = {
     "recovery": ["recovery", "restday", "wellness"],
 }
 
-DEFAULT_CTA = "Follow for a new fitness video every day."
+DEFAULT_CTA = "If this helped, like, share, and subscribe for your daily dose."
 
 
 def generate(entry, part):
