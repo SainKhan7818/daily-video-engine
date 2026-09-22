@@ -633,7 +633,7 @@ OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 #   en-US-AndrewMultilingualNeural- confident male, great for fitness (default)
 #   en-US-EmmaMultilingualNeural  - friendly, upbeat
 #   en-US-AriaNeural / en-US-GuyNeural - reliable classics
-TTS_VOICE = "en-US-AndrewMultilingualNeural"   # confident, energetic — suits fitness
+TTS_VOICE = "en-US-ChristopherNeural"   # confident male; emits word timings for captions
 TTS_RATE = "+8%"    # punchy pace for motivation
 TTS_PITCH = "+0Hz"
 
@@ -1169,6 +1169,12 @@ def run():
 
     # 3) voiceover (+ real word timings) and animated captions
     mp3_path, words = voice_step(content["script"], work_dir)
+    if not words:
+        # Some TTS voices don't emit word-boundary events; fall back to
+        # evenly-spaced timings so the captions still render.
+        cap_dur = _probe_duration(mp3_path)
+        words = even_word_times(content["script"], cap_dur)
+        print(f"[captions] no TTS word timings; using {len(words)} evenly-spaced.")
     ass_path = os.path.join(work_dir, "ass")
     build_ass(words, ass_path, hook=content.get("hook"))
 
