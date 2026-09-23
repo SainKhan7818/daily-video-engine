@@ -1225,99 +1225,112 @@ def run():
     return meta
 
 
+IG_API = "https://graph.instagram.com/v21.0"
+
 def _upload_public(video_path):
-    """Put the mp4 at a temporary PUBLIC https URL (Instagram pulls video from a URL).
-    Uses catbox.moe (free, no key); falls back to 0x0.st. Returns the URL or None."""
-    import requests
-    # try catbox.moe
-    try:
+    ua = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+          "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"}
+    fname = os.path.basename(video_path)
+
+    def litterbox():
+        with open(video_path, "rb") as f:
+            r = requests.post("https://litterbox.catbox.moe/resources/internals/api.php",
+                              data={"reqtype": "fileupload", "time": "24h"},
+                              files={"fileToUpload": (fname, f, "video/mp4")},
+                              headers=ua, timeout=180)
+        return r.text.strip() if r.ok and r.text.strip().startswith("http") else None
+
+    def catbox():
         with open(video_path, "rb") as f:
             r = requests.post("https://catbox.moe/user/api.php",
                               data={"reqtype": "fileupload"},
-                              files={"fileToUpload": f}, timeout=180)
-        url = r.text.strip()
-        if r.ok and url.startswith("http"):
-            print(f"[instagram] public URL (catbox): {url}")
-            return url
-        print(f"[instagram] catbox failed: {r.status_code} {url[:120]}")
-    except Exception as e:  # noqa: BLE001
-        print(f"[instagram] catbox error: {e}")
-    # fallback 0x0.st
-    try:
+                              files={"fileToUpload": (fname, f, "video/mp4")},
+                              headers=ua, timeout=180)
+        return r.text.strip() if r.ok and r.text.strip().startswith("http") else None
+
+    def tmpfiles():
         with open(video_path, "rb") as f:
-            r = requests.post("https://0x0.st", files={"file": f},
-                              headers={"User-Agent": "daily-video-engine"}, timeout=180)
-        url = r.text.strip()
-        if r.ok and url.startswith("http"):
-            print(f"[instagram] public URL (0x0): {url}")
-            return url
-        print(f"[instagram] 0x0 failed: {r.status_code} {url[:120]}")
-    except Exception as e:  # noqa: BLE001
-        print(f"[instagram] 0x0 error: {e}")
+            r = requests.post("https://tmpfiles.org/api/v1/upload",
+                              files={"file": (fname, f, "video/mp4")},
+                              headers=ua, timeout=180)
+        if r.ok:
+            u = (r.json().get("data") or {}).get("url", "")
+            if u.startswith("http"):
+                return u.replace("tmpfiles.org/", "tmpfiles.org/dl/", 1)
+        return None
+
+    def zerox():
+        with open(video_path, "rb") as f:
+            r = requests.post("https://0x0.st",
+                              files={"file": (fname, f, "video/mp4")},
+                              headers=ua, timeout=180)
+        return r.text.strip() if r.ok and r.text.strip().startswith("http") else None
+
+    for name, fn in [("litterbox", litterbox), ("catbox", catbox),
+                     ("tmpfiles", tmpfiles), ("0x0", zerox)]:
+        for attempt in (1, 2):
+            try:
+                link = fn()
+                if link and link.startswith("http"):
+                    print(f"[ig] public url ({name}): {link}")
+                    return link
+                print(f"[ig] {name} no url (try {attempt})")
+            except Exception as e:  # noqa: BLE001
+                print(f"[ig] {name} failed try {attempt} ({e})")
     return None
 
-
 def upload_instagram(video_path, meta):
-    """Publish the finished video as an Instagram Reel.
-    Needs GitHub Secrets: IG_USER_ID, IG_ACCESS_TOKEN. Skips quietly if unset."""
-    import time
-    import requests
-
-    ig_id = os.environ.get("IG_USER_ID", "").strip()
-    token = os.environ.get("IG_ACCESS_TOKEN", "").strip()
-    if not (ig_id and token):
-        print("[instagram] IG secrets not set - skipping upload.")
+    ig_user = os.environ.get("IG_USER_ID", "").strip()
+    ig_token = os.environ.get("IG_ACCESS_TOKEN", "").strip()
+    if not (ig_user and ig_token):
+        print("[ig] IG secrets not set - skipping Instagram (video kept as artifact).")
         return None
-
     public_url = _upload_public(video_path)
     if not public_url:
-        print("[instagram] no public URL available - skipping.")
+        print("[ig] no public URL for the mp4 - skipping Instagram.")
         return None
-
-    caption = meta["description"]
-    if len(caption) > 2100:
-        caption = caption[:2100]
-    # Instagram Graph API via Facebook login (token from Graph API Explorer)
-    base = "https://graph.facebook.com/v21.0"
-
-    # 1) create a REELS container
-    r = requests.post(f"{base}/{ig_id}/media", data={
-        "media_type": "REELS",
-        "video_url": public_url,
-        "caption": caption,
-        "access_token": token,
-    }, timeout=120)
-    j = r.json()
-    creation_id = j.get("id")
-    if not creation_id:
-        print(f"[instagram] container error: {j}")
-        return None
-    print(f"[instagram] container {creation_id} created; waiting for processing...")
-
-    # 2) poll until the container finishes processing (reels take a bit)
-    for _ in range(30):
-        time.sleep(6)
-        s = requests.get(f"{base}/{creation_id}", params={
-            "fields": "status_code", "access_token": token}, timeout=60).json()
-        code = s.get("status_code")
-        if code == "FINISHED":
-            break
-        if code == "ERROR":
-            print(f"[instagram] processing error: {s}")
+    caption = meta["description"][:2100]
+    try:
+        j = requests.post(f"{IG_API}/{ig_user}/media",
+                          data={"media_type": "REELS", "video_url": public_url,
+                                "caption": caption, "access_token": ig_token},
+                          timeout=60).json()
+        cid = j.get("id")
+        if not cid:
+            print(f"[ig] container create failed: {j}")
             return None
-    else:
-        print("[instagram] processing timed out; not publishing.")
+        print(f"[ig] container {cid}; waiting for processing...")
+    except Exception as e:  # noqa: BLE001
+        print(f"[ig] container error ({e})")
         return None
-
-    # 3) publish
-    p = requests.post(f"{base}/{ig_id}/media_publish", data={
-        "creation_id": creation_id, "access_token": token}, timeout=120).json()
-    media_id = p.get("id")
-    if media_id:
-        print(f"[instagram] DONE -> published media {media_id}")
-    else:
-        print(f"[instagram] publish error: {p}")
-    return media_id
+    ready = False
+    for attempt in range(20):
+        time.sleep(15)
+        try:
+            s = requests.get(f"{IG_API}/{cid}",
+                             params={"fields": "status_code", "access_token": ig_token},
+                             timeout=30).json()
+            status = s.get("status_code")
+            print(f"[ig] status[{attempt}]: {status}")
+            if status == "FINISHED":
+                ready = True; break
+            if status == "ERROR":
+                print(f"[ig] container errored: {s}"); return None
+        except Exception as e:  # noqa: BLE001
+            print(f"[ig] status poll error ({e})")
+    if not ready:
+        print("[ig] container not ready in time - skipping publish.")
+        return None
+    try:
+        j = requests.post(f"{IG_API}/{ig_user}/media_publish",
+                          data={"creation_id": cid, "access_token": ig_token},
+                          timeout=60).json()
+        mid = j.get("id")
+        print(f"[ig] DONE -> published Reel {mid}" if mid else f"[ig] publish failed: {j}")
+        return mid
+    except Exception as e:  # noqa: BLE001
+        print(f"[ig] publish error ({e})")
+        return None
 
 
 def upload_youtube(video_path, meta):
