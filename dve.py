@@ -1,5 +1,5 @@
 """Daily Video Engine — single-file build. Paste this whole file into GitHub as dve.py."""
-import os, sys, math, json, glob, random, datetime, subprocess, asyncio, re
+import os, sys, math, json, glob, random, time, datetime, subprocess, asyncio, re
 import urllib.parse, xml.etree.ElementTree as ET
 import requests, numpy as np
 from PIL import Image
