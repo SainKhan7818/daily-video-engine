@@ -31,7 +31,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
 
       - name: Install Python deps
-        run: pip install edge-tts requests numpy Pillow google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+        run: pip install edge-tts gtts requests numpy Pillow google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
 
       - name: Generate the video + auto-post to YouTube
         env:
