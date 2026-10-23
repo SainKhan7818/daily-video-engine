@@ -6,38 +6,20 @@ from PIL import Image
 import edge_tts
 
 # ===== config =====
-"""Central configuration for the daily video engine.
-
-All secrets are read from environment variables so nothing sensitive lives in
-the code. On GitHub Actions these come from repository Secrets; for a local
-test you can `export` them or drop them in a .env file (which is git-ignored).
-"""
-
-# --- API keys (read from environment / GitHub Secrets) ---
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", "")
 PEXELS_API_KEY = os.environ.get("PEXELS_API_KEY", "")
 
-# --- Video format ---
 WIDTH = 1080
 HEIGHT = 1920
 FPS = 30
-TARGET_SECONDS = 42  # aim for a ~40s short/reel (workouts); edu runs longer
+TARGET_SECONDS = 42
 FONT_SIZE = 64
 
 # ---------------------------------------------------------------------------
-# FITNESS CHANNEL — broad content library (full rotation, both daily slots).
-#
-# The engine rotates through the whole library below, two items per day
-# (Part 1 morning, Part 2 evening), walking the list so consecutive posts are
-# always different and the whole set cycles over ~2 weeks.
-#
-# Each entry:
-#   key, label, emoji, category, style ("punchy" | "edu")
-#   sub            - short subtitle used in the title/description
-#   stock_keywords - Pexels search terms for background footage
-#   hook           - short ALL-CAPS title-card line
-#   script         - the full voiceover text
-#   hashtags_extra - topic-specific hashtags (base tags added automatically)
+# FITNESS CHANNEL — bilingual content library (English + Hindi).
+# Each entry carries English fields plus *_hi Hindi fields. The engine picks the
+# language per slot (morning = English, evening = Hindi) and renders captions
+# with a language-appropriate font.
 # ---------------------------------------------------------------------------
 
 CHEST = "\U0001F4AA"; FIRE = "\U0001F525"; LEG = "\U0001F9B5"; LIFT = "\U0001F3CB"
@@ -47,9 +29,11 @@ TROPHY = "\U0001F3C6"; HOME = "\U0001F3E0"; CLOCK = "\U000023F0"; CHART = "\U000
 TARGET = "\U0001F3AF"; CHECK = "\U00002705"; CROSS = "\U0000274C"; FILM = "\U0001F3AC"
 
 CONTENT = [
-# ---- 1. Ranked: best chest exercises (ranked) ----
+# ---- 1. Ranked: chest ----
 {
     "key": "ranked_chest", "label": "Chest Exercises Ranked", "emoji": TROPHY,
+    "label_hi": "बेस्ट चेस्ट एक्सरसाइज", "sub_hi": "बड़ी चेस्ट के लिए टॉप 3",
+    "hook_hi": "चेस्ट रैंकिंग",
     "category": "ranked", "style": "punchy",
     "sub": "Top 3 moves for a bigger chest",
     "stock_keywords": ["bench press gym close up", "incline dumbbell press",
@@ -63,11 +47,21 @@ CONTENT = [
         "Start heavy, finish with the stretch, and your chest grows. "
         "Follow for a new ranking every day."
     ),
+    "script_hi": (
+        "बड़ी और मजबूत चेस्ट के लिए ये हैं टॉप तीन एक्सरसाइज। "
+        "नंबर तीन, केबल फ्लाई। लगातार टेंशन और गहरी स्ट्रेच इसे चेस्ट फिनिश करने के लिए बेहतरीन बनाती है। "
+        "नंबर दो, इनक्लाइन डम्बल प्रेस। यह अपर चेस्ट बनाता है, जो ज्यादातर लोगों की कमजोर रहती है। "
+        "और नंबर एक, फ्लैट बारबेल या डम्बल प्रेस। साइज और ताकत के लिए इससे बेहतर कुछ नहीं, बस वजन को कंट्रोल के साथ नीचे लाएं। "
+        "भारी से शुरू करें, स्ट्रेच पर खत्म करें, और चेस्ट बढ़ेगी। "
+        "रोज नई जानकारी के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["chest", "chestday", "benchpress", "ranked"],
 },
-# ---- 2. Science: progressive overload (science) ----
+# ---- 2. Science: progressive overload ----
 {
     "key": "science_overload", "label": "Why You're Not Growing", "emoji": BRAIN,
+    "label_hi": "मसल क्यों नहीं बढ़ रही", "sub_hi": "प्रोग्रेसिव ओवरलोड का विज्ञान",
+    "hook_hi": "ग्रोथ का नियम",
     "category": "science", "style": "edu",
     "sub": "The science of progressive overload",
     "stock_keywords": ["adding weight plates barbell", "lifting heavy gym",
@@ -82,12 +76,23 @@ CONTENT = [
         "Stay consistent and that slow progress compounds into a new physique. "
         "Follow to train with the science, not guesswork."
     ),
+    "script_hi": (
+        "महीनों से जिम जा रहे हैं पर शरीर वैसा ही है? तो यह विज्ञान आपको पता होना चाहिए। "
+        "मसल तभी बढ़ती है जब आप उसे पहले से ज्यादा करने पर मजबूर करें। इसे प्रोग्रेसिव ओवरलोड कहते हैं। "
+        "हर हफ्ते वही वजन, वही रेप्स करने से शरीर को बदलने की कोई वजह नहीं मिलती। "
+        "इसलिए हर हफ्ते थोड़ा ज्यादा करें, एक रेप बढ़ाएं, थोड़ा वजन बढ़ाएं, या मूवमेंट को धीरे कंट्रोल करें। "
+        "अपनी मेन लिफ्ट्स को नोट करें और पिछले हफ्ते से थोड़ा बेहतर करें। "
+        "लगातार करते रहें और यही छोटी प्रोग्रेस नया शरीर बनाती है। "
+        "विज्ञान के साथ ट्रेनिंग के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["progressiveoverload", "musclegrowth", "gymscience", "hypertrophy"],
     "cta": "Follow to train with the science, not guesswork.",
 },
-# ---- 3. Home workout: no equipment chest/arms (home) ----
+# ---- 3. Home upper body ----
 {
     "key": "home_upper", "label": "Home Upper Body", "emoji": HOME,
+    "label_hi": "घर पर अपर बॉडी", "sub_hi": "बिना इक्विपमेंट, बिना बहाने",
+    "hook_hi": "जिम की जरूरत नहीं",
     "category": "home", "style": "punchy",
     "sub": "No equipment, no excuses",
     "stock_keywords": ["push ups home workout", "home workout living room",
@@ -102,11 +107,22 @@ CONTENT = [
         "Three rounds, short rest, and your upper body is done. "
         "Follow for home workouts that actually work."
     ),
+    "script_hi": (
+        "जिम नहीं? कोई बात नहीं। यह रही पूरी अपर बॉडी वर्कआउट, घर पर, बिना किसी इक्विपमेंट के। "
+        "शुरू करें नॉर्मल पुश-अप्स से, चेस्ट के लिए। ज्यादा नहीं कर पाते? घुटनों पर आ जाएं पर फॉर्म सही रखें। "
+        "फिर डायमंड पुश-अप्स, दोनों हाथ पास-पास, ट्राइसेप्स के लिए। "
+        "इसके बाद पाइक पुश-अप्स, कमर ऊपर उठाकर, कंधों के लिए। "
+        "आखिर में धीरे-धीरे नीचे आते हुए स्लो नेगेटिव्स करें, इससे असली ताकत बनती है। "
+        "तीन राउंड, थोड़ा आराम, और अपर बॉडी हो गई। "
+        "घर की असरदार वर्कआउट के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["homeworkout", "nogym", "calisthenics", "pushups"],
 },
-# ---- 4. Comeback: getting back after a short break (comeback) ----
+# ---- 4. Comeback: short break ----
 {
     "key": "comeback_short", "label": "Back After a Break", "emoji": BOLT,
+    "label_hi": "ब्रेक के बाद वापसी", "sub_hi": "1-2 हफ्ते बाद लौटना",
+    "hook_hi": "वापस जिम में",
     "category": "comeback", "style": "edu",
     "sub": "Returning after 1-2 weeks off",
     "stock_keywords": ["returning to gym workout", "light warm up gym",
@@ -121,12 +137,23 @@ CONTENT = [
         "Within a week or two you'll be right back to where you were, often stronger. "
         "The key is just to start. Follow for smart training."
     ),
+    "script_hi": (
+        "एक या दो हफ्ते का ब्रेक लिया? तो ऐसे करें वापसी, बिना चोट लगाए। "
+        "सबसे पहले, पहले जैसा वजन उठाने की कोशिश मत करें। ताकत अभी भी है, बस उसे जगाना है। "
+        "शुरुआती कुछ सेशन अपने पुराने वजन के करीब अस्सी प्रतिशत पर करें। "
+        "रेप्स थोड़े ज्यादा रखें और हर सेट में दो-तीन रेप्स बाकी छोड़ दें। "
+        "थोड़ी अकड़न होगी, यह सामान्य है, कोई नुकसान नहीं। "
+        "एक-दो हफ्ते में आप फिर वहीं पहुंच जाएंगे, अक्सर पहले से मजबूत। "
+        "बस शुरू करना जरूरी है। स्मार्ट ट्रेनिंग के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["gymmotivation", "comeback", "fitnesstips", "consistency"],
     "cta": "The key is just to start. Follow for smart training.",
 },
-# ---- 5. Legs ranked (ranked) ----
+# ---- 5. Ranked: legs ----
 {
     "key": "ranked_legs", "label": "Leg Exercises Ranked", "emoji": TROPHY,
+    "label_hi": "बेस्ट लेग एक्सरसाइज", "sub_hi": "बड़ी लेग्स के लिए टॉप 3",
+    "hook_hi": "लेग्स रैंकिंग",
     "category": "ranked", "style": "punchy",
     "sub": "Top 3 moves for bigger legs",
     "stock_keywords": ["barbell squat gym", "romanian deadlift gym",
@@ -140,11 +167,21 @@ CONTENT = [
         "Squat, hinge, lunge — that's a complete leg day. "
         "Follow for a new ranking every day."
     ),
+    "script_hi": (
+        "बड़ी और मजबूत लेग्स के लिए ये हैं टॉप तीन एक्सरसाइज। "
+        "नंबर तीन, वॉकिंग लंज। यह क्वाड्स और ग्लूट्स बनाता है और दोनों पैरों का फर्क भी ठीक करता है। "
+        "नंबर दो, रोमानियन डेडलिफ्ट। मजबूत हैमस्ट्रिंग और ग्लूट्स के लिए सबसे अच्छा, स्ट्रेच महसूस करें और कूल्हे आगे धकेलें। "
+        "और नंबर एक, स्क्वाट। लेग एक्सरसाइज का राजा। जितना कंट्रोल के साथ नीचे जा सकें जाएं, पूरी लोअर बॉडी इससे तेजी से बनती है। "
+        "स्क्वाट, हिंज और लंज, यही है पूरा लेग डे। "
+        "रोज नई जानकारी के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["legday", "squats", "legworkout", "ranked"],
 },
-# ---- 6. 60-day plan (plan) ----
+# ---- 6. 60-day plan ----
 {
     "key": "plan_60day", "label": "60-Day Transformation", "emoji": CLOCK,
+    "label_hi": "60 दिन का ट्रांसफॉर्मेशन", "sub_hi": "60 दिन में बदलें अपनी बॉडी",
+    "hook_hi": "60 दिन में बदलाव",
     "category": "plan", "style": "edu",
     "sub": "How to change your body in 60 days",
     "stock_keywords": ["fitness transformation training", "meal prep healthy",
@@ -159,12 +196,23 @@ CONTENT = [
         "No shortcuts, just the basics done daily. "
         "Follow and start your sixty days today."
     ),
+    "script_hi": (
+        "साठ दिन में असली बदलाव चाहिए? तो यह रहा सच्चा प्लान जो काम करता है। "
+        "पहला, हफ्ते में चार दिन ट्रेनिंग करें, हर मसल ग्रुप को दो बार। हर सेट फेलियर के पास ले जाएं और हर हफ्ते थोड़ा बढ़ाएं। "
+        "दूसरा, खाना सही करें। प्रोटीन पूरा लें, शरीर के हर किलो वजन पर करीब दो ग्राम, और कैलोरी अपने लक्ष्य के हिसाब से रखें। "
+        "तीसरा, रोज आठ से दस हजार कदम चलें और सात-आठ घंटे सोएं, क्योंकि रिकवरी तभी होती है। "
+        "साठ दिन लगातार यह करें और आप सिर्फ दिखेंगे नहीं, महसूस भी अलग करेंगे। "
+        "कोई शॉर्टकट नहीं, बस रोज बेसिक्स। "
+        "फॉलो करें और आज से अपने साठ दिन शुरू करें।"
+    ),
     "hashtags_extra": ["transformation", "60daychallenge", "fitnessplan", "fatloss"],
     "cta": "Follow and start your sixty days today.",
 },
-# ---- 7. Back ranked (ranked) ----
+# ---- 7. Ranked: back ----
 {
     "key": "ranked_back", "label": "Back Exercises Ranked", "emoji": TROPHY,
+    "label_hi": "बेस्ट बैक एक्सरसाइज", "sub_hi": "चौड़ी बैक के लिए टॉप 3",
+    "hook_hi": "बैक रैंकिंग",
     "category": "ranked", "style": "punchy",
     "sub": "Top 3 moves for a wide back",
     "stock_keywords": ["pull up bar workout", "barbell row close up",
@@ -178,11 +226,21 @@ CONTENT = [
         "Pull wide, row heavy, squeeze hard. "
         "Follow for a new ranking every day."
     ),
+    "script_hi": (
+        "चौड़ी और मजबूत बैक के लिए ये हैं टॉप तीन एक्सरसाइज। "
+        "नंबर तीन, सीटेड केबल रो। मिड-बैक की मोटाई के लिए बढ़िया, हर रेप पर अच्छे से स्क्वीज करें। "
+        "नंबर दो, बारबेल रो। पूरी बैक बनाता है, बस कोहनियों से खींचें, हाथों से नहीं। "
+        "और नंबर एक, पुल-अप। चौड़ी वी-शेप बैक इससे बेहतर कुछ नहीं बनाता। अभी नहीं कर पाते? बैंड या लैट पुलडाउन इस्तेमाल करें। "
+        "चौड़ा खींचें, भारी रो करें, अच्छे से स्क्वीज करें। "
+        "रोज नई जानकारी के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["back", "pullups", "backday", "ranked"],
 },
-# ---- 8. How to grow your arms (howto) ----
+# ---- 8. How to grow arms ----
 {
     "key": "howto_arms", "label": "How to Grow Your Arms", "emoji": CHEST,
+    "label_hi": "बड़े आर्म्स कैसे बनाएं", "sub_hi": "आर्म्स ट्रेन करने का सही तरीका",
+    "hook_hi": "बड़े आर्म्स का तरीका",
     "category": "howto", "style": "edu",
     "sub": "The right way to train arms",
     "stock_keywords": ["bicep curl dumbbell close up", "tricep pushdown cable",
@@ -197,12 +255,23 @@ CONTENT = [
         "Control plus progression equals bigger arms. "
         "Follow for a how-to every single day."
     ),
+    "script_hi": (
+        "बड़े आर्म्स कैसे बनाएं, स्टेप बाय स्टेप। "
+        "स्टेप एक, पहले ट्राइसेप्स ट्रेन करें, क्योंकि यह आपके आर्म का दो-तिहाई हिस्सा है। पुशडाउन और ओवरहेड एक्सटेंशन से गहरी स्ट्रेच लें। "
+        "स्टेप दो, बाइसेप्स को दो एंगल से लगाएं, नॉर्मल कर्ल पीक के लिए और हैमर कर्ल मोटाई और फोरआर्म के लिए। "
+        "स्टेप तीन, हर रेप धीरे करें और ऊपर अच्छे से स्क्वीज करें। झटका नहीं, पूरा रेंज। "
+        "स्टेप चार, हफ्ते में दो बार आर्म्स ट्रेन करें और हर बार थोड़े ज्यादा रेप्स या वजन लगाएं। "
+        "कंट्रोल और प्रोग्रेशन मिलकर बड़े आर्म्स बनाते हैं। "
+        "रोज एक नई टिप के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["arms", "biceps", "triceps", "howto"],
     "cta": "Follow for a how-to every single day.",
 },
-# ---- 9. Myth: lifting makes you bulky (myth) ----
+# ---- 9. Myth: bulky ----
 {
     "key": "myth_bulky", "label": "Lifting Myths", "emoji": CROSS,
+    "label_hi": "जिम का मिथक", "sub_hi": "वजन उठाने से बॉडी भारी नहीं होती",
+    "hook_hi": "मिथक गलत",
     "category": "myth", "style": "edu",
     "sub": "Lifting won't make you bulky",
     "stock_keywords": ["woman lifting weights gym", "toned workout gym",
@@ -216,12 +285,22 @@ CONTENT = [
         "So don't fear the weights. Lift, eat for your goal, and you'll look fit and athletic, not bulky. "
         "Follow to train on facts, not fear."
     ),
+    "script_hi": (
+        "मिथक, वजन उठाने से शरीर भारी और भद्दा हो जाता है। चलिए इसे तोड़ते हैं। "
+        "बड़ी, भारी मसल बनाने में सालों की भारी ट्रेनिंग और जानबूझकर ज्यादा कैलोरी खाना लगता है। यह गलती से नहीं होता। "
+        "वजन उठाने से असल में एक लीन, टोन्ड और मजबूत दिखने वाला शरीर बनता है, फैट घटता है और शेप बनती है। "
+        "वह टोन्ड लुक जो सबको चाहिए? वह असल में मसल ही है। थोड़ी मसल बनाए बिना टोन नहीं होता। "
+        "तो वजन से मत डरें। उठाएं, अपने लक्ष्य के हिसाब से खाएं, और आप फिट और एथलेटिक दिखेंगे, भारी नहीं। "
+        "फैक्ट्स पर ट्रेनिंग के लिए फॉलो करें, डर पर नहीं।"
+    ),
     "hashtags_extra": ["fitnessmyths", "mythbusting", "womensfitness", "strengthtraining"],
     "cta": "Follow to train on facts, not fear.",
 },
-# ---- 10. Before/after motivation (transformation) ----
+# ---- 10. Transformation: discipline ----
 {
     "key": "transform_discipline", "label": "Discipline Over Motivation", "emoji": CHART,
+    "label_hi": "मोटिवेशन से ऊपर डिसिप्लिन", "sub_hi": "रिजल्ट का असली राज",
+    "hook_hi": "डिसिप्लिन जीतता है",
     "category": "transformation", "style": "punchy",
     "sub": "The real secret to results",
     "stock_keywords": ["sunrise running motivation", "hard gym training sweat",
@@ -236,11 +315,22 @@ CONTENT = [
         "Fall in love with the process, and the results take care of themselves. "
         "Follow for your daily push."
     ),
+    "script_hi": (
+        "हर बड़े ट्रांसफॉर्मेशन के पीछे का सच, यह मोटिवेशन नहीं, डिसिप्लिन है। "
+        "मोटिवेशन अच्छे दिनों में आता है। डिसिप्लिन वह है जो आपको उन दिनों भी जिम खींच लाता है जब कुछ करने का मन नहीं होता। "
+        "रिजल्ट उसे मिलता है जो सबसे ज्यादा मोटिवेटेड नहीं, बल्कि जो बार-बार फिर भी आता है। "
+        "हर दिन तैयार महसूस नहीं होगा। हर दिन मन नहीं करेगा। फिर भी जाएं। "
+        "छोटी, बोरिंग, लगातार मेहनत एक परफेक्ट हफ्ते से हमेशा जीतती है। "
+        "प्रोसेस से प्यार करें, रिजल्ट अपने आप आएंगे। "
+        "रोज के पुश के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["discipline", "gymmotivation", "mindset", "transformation"],
 },
-# ---- 11. Shoulders ranked (ranked) ----
+# ---- 11. Ranked: shoulders ----
 {
     "key": "ranked_shoulders", "label": "Shoulder Exercises Ranked", "emoji": TROPHY,
+    "label_hi": "बेस्ट शोल्डर एक्सरसाइज", "sub_hi": "गोल कंधों के लिए टॉप 3",
+    "hook_hi": "शोल्डर रैंकिंग",
     "category": "ranked", "style": "punchy",
     "sub": "Top 3 moves for round delts",
     "stock_keywords": ["overhead press barbell", "lateral raise dumbbell",
@@ -254,11 +344,21 @@ CONTENT = [
         "Press heavy, raise light, and never skip the rear. "
         "Follow for a new ranking every day."
     ),
+    "script_hi": (
+        "गोल और चौड़े कंधों के लिए ये हैं टॉप तीन एक्सरसाइज। "
+        "नंबर तीन, रियर-डेल्ट फ्लाई। वह मसल जिसे सब भूल जाते हैं, और जो कंधों को साइड से पूरा दिखाती है। "
+        "नंबर दो, ओवरहेड प्रेस। कंधों के आगे और बीच के हिस्से के लिए मुख्य ताकत और साइज बनाने वाली एक्सरसाइज। "
+        "और नंबर एक, लेटरल रेज। साइड डेल्ट ही चौड़ा लुक देता है, हल्का वजन लें, कोहनियों से उठाएं और कंट्रोल से नीचे लाएं। "
+        "भारी प्रेस करें, हल्का रेज करें, और रियर कभी न छोड़ें। "
+        "रोज नई जानकारी के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["shoulders", "delts", "lateralraise", "ranked"],
 },
-# ---- 12. Science: muscle recovery (science) ----
+# ---- 12. Science: recovery ----
 {
     "key": "science_recovery", "label": "How Muscles Recover", "emoji": BRAIN,
+    "label_hi": "मसल कैसे रिकवर होती है", "sub_hi": "आराम से मसल क्यों बढ़ती है",
+    "hook_hi": "आराम में ग्रोथ",
     "category": "science", "style": "edu",
     "sub": "Why rest builds muscle",
     "stock_keywords": ["person resting relaxing", "sleep bedroom calm",
@@ -273,12 +373,23 @@ CONTENT = [
         "Respect recovery and you'll grow faster than someone who never rests. "
         "Follow for training backed by science."
     ),
+    "script_hi": (
+        "यह विज्ञान ज्यादातर लोग अनदेखा करते हैं, मसल जिम में नहीं, आराम में बनती है। "
+        "ट्रेनिंग के दौरान मसल फाइबर में छोटे-छोटे टियर बनते हैं। वर्कआउट सिर्फ एक सिग्नल है। "
+        "असली रिपेयर और ग्रोथ बाद के घंटों और दिनों में होती है, प्रोटीन, नींद और आराम से। "
+        "इसीलिए एक ही मसल रोज पीटना उल्टा पड़ता है, उसे मजबूत होने का समय ही नहीं मिलता। "
+        "हर मसल को दोबारा भारी ट्रेन करने से पहले करीब अड़तालीस घंटे दें। सात से नौ घंटे सोएं। प्रोटीन पूरा लें। "
+        "रिकवरी को महत्व दें और आप उससे तेज बढ़ेंगे जो कभी आराम नहीं करता। "
+        "विज्ञान वाली ट्रेनिंग के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["recovery", "musclegrowth", "gymscience", "restday"],
     "cta": "Follow for training backed by science.",
 },
-# ---- 13. Home lower body (home) ----
+# ---- 13. Home legs ----
 {
     "key": "home_legs", "label": "Home Leg Workout", "emoji": HOME,
+    "label_hi": "घर पर लेग वर्कआउट", "sub_hi": "बिना वजन के बनाएं लेग्स",
+    "hook_hi": "घर पर लेग्स",
     "category": "home", "style": "punchy",
     "sub": "Build legs with no weights",
     "stock_keywords": ["bodyweight squat home", "lunges home workout",
@@ -294,11 +405,23 @@ CONTENT = [
         "Three rounds and you won't miss the gym. "
         "Follow for home workouts that deliver."
     ),
+    "script_hi": (
+        "घर पर बिना इक्विपमेंट के भी मजबूत लेग्स बना सकते हैं। यह रहा तरीका। "
+        "शुरू करें बॉडीवेट स्क्वाट से, धीरे और गहरे, ज्यादा रेप्स में। "
+        "फिर रिवर्स लंज, एक-एक पैर, ताकि दोनों तरफ बराबर बने। "
+        "इसके बाद बल्गेरियन स्प्लिट स्क्वाट, पिछला पैर कुर्सी पर, मुश्किल पर असरदार। "
+        "आखिर में वॉल सिट, तब तक रुकें जब तक पैर जलने न लगें। "
+        "राज है रेप्स और कंट्रोल, सब कुछ धीरे करें और बर्न महसूस करें। "
+        "तीन राउंड और जिम याद नहीं आएगा। "
+        "असरदार होम वर्कआउट के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["homeworkout", "legday", "nogym", "bodyweight"],
 },
-# ---- 14. Comeback: long break (comeback) ----
+# ---- 14. Comeback: long break ----
 {
     "key": "comeback_long", "label": "Back After Months Off", "emoji": BOLT,
+    "label_hi": "महीनों बाद वापसी", "sub_hi": "लंबे ब्रेक के बाद शुरुआत",
+    "hook_hi": "मजबूत रीस्टार्ट",
     "category": "comeback", "style": "edu",
     "sub": "Returning after a long layoff",
     "stock_keywords": ["person starting gym", "beginner gym workout",
@@ -313,12 +436,23 @@ CONTENT = [
         "Be patient for a few weeks and momentum takes over. "
         "Follow and let's rebuild together."
     ),
+    "script_hi": (
+        "महीनों या उससे ज्यादा जिम से दूर रहे? तो ऐसे करें रीस्टार्ट, बिना चोट और बिना थके। "
+        "भूल जाएं कि पहले कहां थे, ईगो वहीं पहुंचना चाहेगा, और इसी से लोग चोटिल होते हैं। "
+        "पहले दो हफ्ते हल्का ट्रेन करें, रेप्स मीडियम रखें और फेलियर से काफी पहले रुकें। जोड़ों और टेंडन को मसल के साथ आने दें। "
+        "सिंपल फुल-बॉडी सेशन पर ध्यान दें, हफ्ते में दो-तीन बार, बड़े बेसिक्स। "
+        "अच्छी खबर, मसल मेमोरी की वजह से आप अपनी पुरानी ताकत और साइज पहली बार से कहीं तेजी से वापस पाएंगे। "
+        "कुछ हफ्ते धैर्य रखें, फिर रफ्तार खुद आ जाएगी। "
+        "फॉलो करें, साथ मिलकर दोबारा बनाते हैं।"
+    ),
     "hashtags_extra": ["gymmotivation", "musclememory", "comeback", "beginner"],
     "cta": "Follow and let's rebuild together.",
 },
-# ---- 15. 90-day plan (plan) ----
+# ---- 15. 90-day plan ----
 {
     "key": "plan_90day", "label": "90-Day Dream Physique", "emoji": CLOCK,
+    "label_hi": "90 दिन में ड्रीम फिजीक", "sub_hi": "90 दिन में बनाएं ड्रीम बॉडी",
+    "hook_hi": "90 दिन, नया आप",
     "category": "plan", "style": "edu",
     "sub": "Build your dream body in 90 days",
     "stock_keywords": ["fitness transformation gym", "healthy meal prep containers",
@@ -333,12 +467,23 @@ CONTENT = [
         "Take a photo today, repeat this for ninety days, and the before-and-after will shock you. "
         "Follow and start day one now."
     ),
+    "script_hi": (
+        "नब्बे दिन काफी हैं अपना पूरा लुक बदलने के लिए, अगर ये चार चीजें सही करें। "
+        "एक, हफ्ते में चार-पांच दिन वजन उठाएं, सिंपल पुश, पुल, लेग्स स्प्लिट पर, और समय के साथ मजबूत बनें। "
+        "दो, अपने लक्ष्य के हिसाब से खाएं। प्रोटीन हमेशा ज्यादा, और कैलोरी फैट लॉस या मसल गेन के लिए सेट करें, एक चुनें और टिके रहें। "
+        "तीन, थोड़ा कार्डियो करें और रोज एक्टिव रहें। दस हजार कदम फैट लॉस चालू रखते हैं बिना गेन नुकसान किए। "
+        "चार, सोएं और रिकवर करें, क्योंकि शरीर आराम में बदलता है, स्क्रॉल करते हुए नहीं। "
+        "आज एक फोटो लें, नब्बे दिन यही दोहराएं, और बिफोर-आफ्टर चौंका देगा। "
+        "फॉलो करें और आज से दिन एक शुरू करें।"
+    ),
     "hashtags_extra": ["90daychallenge", "transformation", "fitnessplan", "dreamphysique"],
     "cta": "Follow and start day one now.",
 },
-# ---- 16. Myth: spot reduction (myth) ----
+# ---- 16. Myth: spot reduction ----
 {
     "key": "myth_spotreduction", "label": "Belly Fat Myth", "emoji": CROSS,
+    "label_hi": "पेट की चर्बी का मिथक", "sub_hi": "एक जगह की चर्बी टारगेट नहीं होती",
+    "hook_hi": "मिथक गलत",
     "category": "myth", "style": "edu",
     "sub": "You can't target fat loss",
     "stock_keywords": ["abs workout gym", "healthy food vegetables",
@@ -353,12 +498,23 @@ CONTENT = [
         "Train abs like any muscle, but reveal them in the kitchen. "
         "Follow to train on facts, not myths."
     ),
+    "script_hi": (
+        "मिथक, लगातार क्रंचेस करने से पेट की चर्बी घटती है। चलिए इसे तोड़ते हैं। "
+        "आप किसी एक जगह की चर्बी टारगेट करके नहीं घटा सकते। किसी मसल को ट्रेन करने से उसके ऊपर की चर्बी नहीं जलती। "
+        "हजार क्रंचेस आपके एब्स बना देंगे, पर अगर वे चर्बी के नीचे छुपे हैं, तो कोई नहीं देख पाएगा। "
+        "चर्बी पूरे शरीर से एक साथ घटती है, उसी क्रम में जो आपके जीन तय करते हैं, और घटती है कैलोरी डेफिसिट से। "
+        "तो एब्स दिखाने के लिए, हल्के डेफिसिट में खाएं, प्रोटीन ज्यादा रखें, वजन उठाएं और एक्टिव रहें। "
+        "एब्स को किसी मसल की तरह ट्रेन करें, पर दिखाएं किचन से। "
+        "फैक्ट्स पर ट्रेनिंग के लिए फॉलो करें, मिथकों पर नहीं।"
+    ),
     "hashtags_extra": ["fitnessmyths", "absworkout", "fatloss", "mythbusting"],
     "cta": "Follow to train on facts, not myths.",
 },
-# ---- 17. Compilation / remix-style best tips (compilation) ----
+# ---- 17. Compilation: 5 tips ----
 {
     "key": "compilation_tips", "label": "5 Gym Tips in 40 Seconds", "emoji": FILM,
+    "label_hi": "40 सेकंड में 5 जिम टिप्स", "sub_hi": "तेज टिप्स जो काम करती हैं",
+    "hook_hi": "5 टिप्स, तेज",
     "category": "compilation", "style": "punchy",
     "sub": "Rapid-fire tips that actually work",
     "stock_keywords": ["fast gym workout montage", "intense training gym",
@@ -374,11 +530,23 @@ CONTENT = [
         "Master these five and you're ahead of ninety percent of the gym. "
         "Follow for rapid tips every day."
     ),
+    "script_hi": (
+        "चालीस सेकंड में पांच जिम टिप्स। शुरू। "
+        "एक, हर रेप का नीचे वाला हिस्सा कंट्रोल करें। स्लो नेगेटिव्स भारी झटके से ज्यादा मसल बनाते हैं। "
+        "दो, फेलियर के पास ट्रेन करें, एक-दो रेप्स बाकी छोड़ें, दस नहीं। "
+        "तीन, प्रोग्रेसिव ओवरलोड। हर सेशन पिछले हफ्ते से एक रेप या थोड़ा वजन ज्यादा करें। "
+        "चार, प्रोटीन पूरा लें, शरीर के हर किलो वजन पर करीब दो ग्राम, रोज। "
+        "पांच, सात से नौ घंटे सोएं, क्योंकि मसल असल में तभी बनती है। "
+        "ये पांच अपना लें और आप नब्बे प्रतिशत लोगों से आगे हैं। "
+        "रोज तेज टिप्स के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["gymtips", "fitnesstips", "workout", "gymhacks"],
 },
-# ---- 18. How to lose belly fat (howto) ----
+# ---- 18. How to lose fat ----
 {
     "key": "howto_fatloss", "label": "How to Lose Fat", "emoji": DROP,
+    "label_hi": "फैट कैसे घटाएं", "sub_hi": "स्टेप बाय स्टेप फैट लॉस",
+    "hook_hi": "फैट घटाने का तरीका",
     "category": "howto", "style": "edu",
     "sub": "Step-by-step fat loss",
     "stock_keywords": ["healthy food vegetables", "person walking outdoor",
@@ -394,8 +562,113 @@ CONTENT = [
         "Do these five and the fat comes off for good. "
         "Follow for a how-to every day."
     ),
+    "script_hi": (
+        "फैट कैसे घटाएं, स्टेप बाय स्टेप, बिना किसी नौटंकी के। "
+        "स्टेप एक, हल्के कैलोरी डेफिसिट में खाएं। खाने से थोड़ा ज्यादा जलाएं, असल में फैट सिर्फ इसी से घटता है। "
+        "स्टेप दो, प्रोटीन ज्यादा रखें ताकि मसल बची रहे और पेट भरा लगे, जिससे फैट घटे, मसल नहीं। "
+        "स्टेप तीन, हफ्ते में तीन-चार बार वजन उठाएं, ताकि शरीर को मसल बनाए रखने की वजह मिले। "
+        "स्टेप चार, रोज चलें। कदम लंबे समय में कठिन कार्डियो से ज्यादा फैट जलाते हैं। "
+        "स्टेप पांच, हफ्ते में करीब आधा किलो घटाने का लक्ष्य रखें, धीरे और टिकाऊ। "
+        "ये पांच करें और फैट हमेशा के लिए जाएगा। "
+        "रोज एक नई टिप के लिए फॉलो करें।"
+    ),
     "hashtags_extra": ["fatloss", "howto", "weightloss", "caloriedeficit"],
     "cta": "Follow for a how-to every day.",
+},
+# ---- 19. Science: reps & sets ----
+{
+    "key": "science_reps", "label": "How Many Reps to Grow", "emoji": BRAIN,
+    "label_hi": "कितने रेप्स से ग्रोथ", "sub_hi": "रेप्स और सेट्स का विज्ञान",
+    "hook_hi": "कितने रेप्स?",
+    "category": "science", "style": "edu",
+    "sub": "Reps and sets, settled",
+    "stock_keywords": ["dumbbell reps gym", "counting reps workout",
+                       "barbell training sets", "focused lifting gym", "gym training intense"],
+    "hook": "REPS, SETTLED",
+    "script": (
+        "How many reps should you actually do to build muscle? Here's what the science says. "
+        "The sweet spot for growth is roughly six to fifteen reps per set, taken close to failure. "
+        "What matters most isn't the exact number — it's that the last few reps are genuinely hard. "
+        "Heavier sets of six to eight build more strength; lighter sets of twelve to fifteen give a great pump. Use both. "
+        "Aim for around ten to twenty hard sets per muscle group per week, spread over two sessions. "
+        "And push each set close to failure, leaving one or two reps in the tank. "
+        "Effort plus the right rep range equals growth. "
+        "Follow for training backed by science."
+    ),
+    "script_hi": (
+        "मसल बनाने के लिए असल में कितने रेप्स करने चाहिए? यह रहा विज्ञान। "
+        "ग्रोथ के लिए सबसे अच्छी रेंज है हर सेट में करीब छह से पंद्रह रेप्स, फेलियर के पास तक। "
+        "सबसे जरूरी सही संख्या नहीं, बल्कि यह है कि आखिरी कुछ रेप्स सच में मुश्किल हों। "
+        "छह से आठ के भारी सेट ताकत ज्यादा बढ़ाते हैं, बारह से पंद्रह के हल्के सेट अच्छा पंप देते हैं। दोनों इस्तेमाल करें। "
+        "हर मसल ग्रुप के लिए हफ्ते में करीब दस से बीस हार्ड सेट रखें, दो सेशन में बांटकर। "
+        "और हर सेट फेलियर के पास ले जाएं, एक-दो रेप्स बाकी छोड़कर। "
+        "मेहनत और सही रेप रेंज मिलकर ग्रोथ देते हैं। "
+        "विज्ञान वाली ट्रेनिंग के लिए फॉलो करें।"
+    ),
+    "hashtags_extra": ["repsandsets", "hypertrophy", "gymscience", "musclegrowth"],
+    "cta": "Follow for training backed by science.",
+},
+# ---- 20. How to: first pull-up ----
+{
+    "key": "howto_firstpullup", "label": "Get Your First Pull-Up", "emoji": LIFT,
+    "label_hi": "पहला पुल-अप कैसे करें", "sub_hi": "जीरो से पहला पुल-अप",
+    "hook_hi": "पहला पुल-अप",
+    "category": "howto", "style": "edu",
+    "sub": "From zero to your first rep",
+    "stock_keywords": ["pull up bar workout", "assisted pull up band",
+                       "hanging bar grip", "lat pulldown gym", "negative pull up"],
+    "hook": "YOUR FIRST PULL-UP",
+    "script": (
+        "Can't do a single pull-up yet? Here's how to get your first one, step by step. "
+        "Step one: just hang from the bar for thirty seconds at a time to build grip and shoulder strength. "
+        "Step two: do negatives. Jump to the top, then lower yourself as slowly as you can — aim for three to five seconds down. "
+        "Step three: use a resistance band looped on the bar for assisted reps, and use a thinner band as you get stronger. "
+        "Step four: train lat pulldowns and rows so your back gets stronger every week. "
+        "Do this two or three times a week and that first clean pull-up is closer than you think. "
+        "Follow for a how-to every day."
+    ),
+    "script_hi": (
+        "अभी एक भी पुल-अप नहीं कर पाते? यह रहा पहला पुल-अप पाने का तरीका, स्टेप बाय स्टेप। "
+        "स्टेप एक, बार पर बस तीस-तीस सेकंड लटकें, इससे ग्रिप और कंधे की ताकत बनेगी। "
+        "स्टेप दो, नेगेटिव्स करें। कूदकर ऊपर जाएं, फिर खुद को जितना धीरे हो सके नीचे लाएं, तीन से पांच सेकंड में। "
+        "स्टेप तीन, बार पर रेजिस्टेंस बैंड लगाकर असिस्टेड रेप्स करें, और मजबूत होते जाएं तो पतला बैंड लें। "
+        "स्टेप चार, लैट पुलडाउन और रो करें ताकि बैक हर हफ्ते मजबूत हो। "
+        "हफ्ते में दो-तीन बार यह करें और पहला साफ पुल-अप जितना सोचते हैं उससे पास है। "
+        "रोज एक नई टिप के लिए फॉलो करें।"
+    ),
+    "hashtags_extra": ["pullups", "howto", "calisthenics", "backday"],
+    "cta": "Follow for a how-to every day.",
+},
+# ---- 21. Myth: soreness ----
+{
+    "key": "myth_soreness", "label": "Soreness Myth", "emoji": CROSS,
+    "label_hi": "दर्द का मिथक", "sub_hi": "दर्द का मतलब ग्रोथ नहीं",
+    "hook_hi": "मिथक गलत",
+    "category": "myth", "style": "edu",
+    "sub": "Sore doesn't mean growth",
+    "stock_keywords": ["muscle soreness stretch", "gym recovery rest",
+                       "athlete tired workout", "foam rolling recovery", "gym training hard"],
+    "hook": "MYTH BUSTED",
+    "script": (
+        "Myth: if you're not sore, your workout didn't work. Let's bust it. "
+        "Soreness just means you did something your body isn't used to yet. It is not a scoreboard for muscle growth. "
+        "Beginners and people trying new exercises get very sore. Trained lifters often grow fast while barely feeling sore at all. "
+        "What actually builds muscle is progressive overload — doing a little more over time — not how wrecked you feel the next day. "
+        "Chasing soreness on purpose just hurts your recovery and your next session. "
+        "So track your reps and weights, not your soreness. "
+        "Follow to train on facts, not myths."
+    ),
+    "script_hi": (
+        "मिथक, अगर दर्द नहीं हुआ तो वर्कआउट काम नहीं आया। चलिए इसे तोड़ते हैं। "
+        "दर्द का बस इतना मतलब है कि आपने कुछ ऐसा किया जिसका शरीर को अभी आदत नहीं। यह मसल ग्रोथ का स्कोरबोर्ड नहीं। "
+        "शुरुआती लोगों और नई एक्सरसाइज करने वालों को बहुत दर्द होता है। अनुभवी लोग अक्सर बिना ज्यादा दर्द के तेजी से बढ़ते हैं। "
+        "मसल असल में प्रोग्रेसिव ओवरलोड से बनती है, समय के साथ थोड़ा ज्यादा करने से, न कि अगले दिन कितना दर्द हुआ उससे। "
+        "जानबूझकर दर्द के पीछे भागना बस आपकी रिकवरी और अगला सेशन खराब करता है। "
+        "तो दर्द नहीं, अपने रेप्स और वजन ट्रैक करें। "
+        "फैक्ट्स पर ट्रेनिंग के लिए फॉलो करें, मिथकों पर नहीं।"
+    ),
+    "hashtags_extra": ["fitnessmyths", "doms", "recovery", "mythbusting"],
+    "cta": "Follow to train on facts, not myths.",
 },
 ]
 
@@ -403,13 +676,25 @@ CONTENT = [
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_DIR = os.path.join(BASE_DIR, "output")
 
-# --- Voice (edge-tts neural voice; free, no key) ---
-TTS_VOICE = "en-US-ChristopherNeural"   # confident male; emits word timings for captions
-TTS_RATE = "+8%"                        # punchy pace for motivation
-TTS_PITCH = "+0Hz"
-# Backup English voices tried (in order) if the primary 403s / fails.
-TTS_FALLBACK_VOICES = ["en-US-GuyNeural", "en-US-AndrewMultilingualNeural",
-                       "en-US-EricNeural", "en-GB-RyanNeural"]
+# --- Voice (edge-tts neural voices; free, no key) ---
+# English + Hindi primaries, each with backups, then gTTS as last resort.
+VOICE_CONFIG = {
+    "en": {
+        "primary": "en-US-ChristopherNeural",
+        "backups": ["en-US-GuyNeural", "en-US-AndrewMultilingualNeural",
+                    "en-US-EricNeural", "en-GB-RyanNeural"],
+        "rate": "+8%", "pitch": "+0Hz", "gtts_lang": "en",
+    },
+    "hi": {
+        "primary": "hi-IN-MadhurNeural",
+        "backups": ["hi-IN-SwaraNeural", "en-US-AndrewMultilingualNeural"],
+        "rate": "+0%", "pitch": "+0Hz", "gtts_lang": "hi",
+    },
+}
+
+# Caption fonts per language (installed on the runner via the workflow).
+FONT_EN = "DejaVu Sans"
+FONT_HI = "Lohit Devanagari"   # Devanagari-capable; from fonts-lohit-deva
 
 # YouTube category IDs per content category (used by the YouTube uploader).
 # 17 = Sport, 26 = Howto & Style, 27 = Education
@@ -422,40 +707,52 @@ YT_CATEGORY = {
 }
 
 # ===== topics =====
-"""Full rotation: walk the whole CONTENT library, two items per day.
+"""Rotation — the repeat fix.
 
-Part 1 (morning) and Part 2 (evening) take consecutive entries, so the two
-daily posts are always different, and the whole library cycles over time.
+Two posts per day. 'part' (1 = morning, 2 = evening) is passed in from the
+workflow based on WHICH cron fired, so GitHub's scheduler drift can no longer
+make both daily runs pick the same slot (that was the cause of same-day
+duplicate uploads).
+
+A monotonic post counter (days since an epoch * 2 + part) walks the whole
+CONTENT library one entry at a time, so the two daily posts are always
+different, consecutive topics. Language alternates by slot: morning = English,
+evening = Hindi. With an odd-length library, every topic cycles through both
+languages over time.
 """
 
+EPOCH = datetime.date(2026, 1, 1)
+
 def current_part():
-    """Part 1 in the morning, Part 2 in the evening.
-    Controlled by env VIDEO_PART if set (workflow), else derived from UTC hour."""
+    """1 = morning, 2 = evening. Comes from VIDEO_PART (set by the workflow from
+    the cron that fired, or the manual input). Falls back to UTC hour only if
+    that is somehow unset."""
     env = os.environ.get("VIDEO_PART", "").strip()
     if env in ("1", "2"):
         return int(env)
     hour = datetime.datetime.utcnow().hour
-    return 1 if hour < 11 else 2  # <11:00 UTC = morning IST, else evening
+    return 1 if hour < 11 else 2
 
 def pick_content():
-    """Return (entry, part). Rotates through the entire CONTENT library."""
+    """Return (entry, part, lang). Walks the whole library one topic per post."""
     part = current_part()
-    doy = datetime.date.today().timetuple().tm_yday  # 1..366
-    idx = (doy * 2 + (part - 1)) % len(CONTENT)
-    entry = CONTENT[idx]
+    days = (datetime.date.today() - EPOCH).days
+    slot = days * 2 + (part - 1)        # monotonic post number (…,N,N+1,…)
+    topic_idx = slot % len(CONTENT)
+    lang = "en" if part == 1 else "hi"
+    entry = CONTENT[topic_idx]
     print(f"[topics] {entry['label']} | {entry['category']} | Part {part} "
-          f"| idx {idx}/{len(CONTENT)}")
-    return entry, part
+          f"| lang {lang} | idx {topic_idx}/{len(CONTENT)}")
+    return entry, part, lang
 
 # ===== script_gen =====
-"""Assemble SEO metadata (title, description, hashtags, tags) around each
-content entry's ready-made script. Deterministic, no API key needed.
+"""Assemble SEO metadata around each content entry's ready-made script, in the
+chosen language. Deterministic, no API key needed.
 """
 
 BASE_TAGS = ["gym", "fitness", "workout", "gymtok", "fitfam", "bodybuilding",
              "gymmotivation", "fitnessmotivation", "training", "shorts", "reels"]
 
-# Category-level hashtags mixed into every post of that category.
 CATEGORY_HASHTAGS = {
     "workout": ["workout", "gymmotivation", "bodybuilding"],
     "warmup": ["warmup", "gymtips", "mobility"],
@@ -476,25 +773,31 @@ CATEGORY_HASHTAGS = {
     "compilation": ["gymtips", "gymhacks", "fitnesstips"],
 }
 
-DEFAULT_CTA = "If this helped, like, share, and subscribe for your daily dose."
+DEFAULT_CTA_EN = "If this helped, like, share, and subscribe for your daily dose."
+DEFAULT_CTA_HI = "पसंद आया तो लाइक, शेयर और सब्सक्राइब करना न भूलें।"
+HINDI_EXTRA_TAGS = ["hindi", "fitnesshindi", "gymhindi", "workouthindi"]
 
-def generate(entry, part):
-    label = entry["label"]
+def generate(entry, part, lang="en"):
+    hi = (lang == "hi")
+    label = entry.get("label_hi", entry["label"]) if hi else entry["label"]
     emoji = entry.get("emoji", CHEST)
-    sub = entry.get("sub", "")
-    script = entry["script"]
-    hook = entry.get("hook", label.upper())
-    cta = entry.get("cta", DEFAULT_CTA)
+    sub = entry.get("sub_hi", entry.get("sub", "")) if hi else entry.get("sub", "")
+    script = entry.get("script_hi", entry["script"]) if hi else entry["script"]
+    hook = (entry.get("hook_hi") or entry.get("hook") or label) if hi else entry.get("hook", label.upper())
+    cta = (entry.get("cta_hi", DEFAULT_CTA_HI) if hi else entry.get("cta", DEFAULT_CTA_EN))
 
-    # Title: label + short subtitle, platform tags appended.
-    title = f"{label} {emoji} | {sub} #shorts #fitness"
+    # Title
+    if hi:
+        title = f"{label} {emoji} | {sub} #shorts #fitness #hindi"
+    else:
+        title = f"{label} {emoji} | {sub} #shorts #fitness"
     if len(title) > 100:
         title = title[:100]
 
-    # Hashtags: topic-specific + category + a few base, de-duplicated.
     hashtags = list(dict.fromkeys(
         entry.get("hashtags_extra", [])
         + CATEGORY_HASHTAGS.get(entry["category"], [])
+        + (HINDI_EXTRA_TAGS if hi else [])
         + ["gym", "fitness", "shorts", "reels", "fyp"]
     ))[:15]
     tag_line = " ".join("#" + h for h in hashtags)
@@ -502,16 +805,15 @@ def generate(entry, part):
     description = (
         f"{label} — {sub}.\n\n"
         f"{script}\n\n"
-        f"{cta} Part 1 in the morning, Part 2 at night.\n\n{tag_line}"
+        f"{cta}\n\n{tag_line}"
     )
 
-    # YouTube search tags (plain keywords, not #hashtags).
     tags = list(dict.fromkeys(
-        [entry["key"].replace("_", " "), label.lower(), entry["category"],
-         "fitness", "workout", "gym tips"] + BASE_TAGS
+        [entry["key"].replace("_", " "), entry["label"].lower(), entry["category"],
+         "fitness", "workout", "gym tips"] + BASE_TAGS + (["hindi fitness"] if hi else [])
     ))[:15]
 
-    print(f"[script] {label} Part {part} | {title[:50]}...")
+    print(f"[script] {label} Part {part} ({lang}) | {title[:50]}...")
     return {
         "hook": hook,
         "title": title,
@@ -521,19 +823,21 @@ def generate(entry, part):
         "hashtags": hashtags,
         "tags": tags,
         "category_id": YT_CATEGORY.get(entry["category"], "17"),
+        "lang": lang,
+        "font": FONT_HI if hi else FONT_EN,
+        "audio_lang": "hi" if hi else "en",
     }
 
 # ===== captions =====
-"""Build animated, word-by-word captions in ASS format ("Hormozi" style)."""
+"""Animated, word-by-word captions in ASS ("Hormozi" style). Font is chosen by
+language so Hindi (Devanagari) renders correctly."""
 
-# ASS colours are &HAABBGGRR (alpha, blue, green, red).
 WHITE = "&H00FFFFFF"
 ACCENT = "&H0000F5FF"   # warm yellow
 OUTLINE = "&H00000000"
 BACK = "&H90000000"
 
-WORDS_PER_PHRASE = 3    # how many words sit on screen at once
-FONT = "DejaVu Sans"
+WORDS_PER_PHRASE = 3
 FONTSIZE = 90
 
 def _ts(t):
@@ -546,7 +850,7 @@ def _ts(t):
         cs = 0
     return f"{h:d}:{m:02d}:{s:02d}.{cs:02d}"
 
-def _header():
+def _header(font):
     return (
         "[Script Info]\n"
         "ScriptType: v4.00+\n"
@@ -559,9 +863,9 @@ def _header():
         "OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, "
         "ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, "
         "MarginL, MarginR, MarginV, Encoding\n"
-        f"Style: Base,{FONT},{FONTSIZE},{WHITE},{ACCENT},{OUTLINE},{BACK},"
+        f"Style: Base,{font},{FONTSIZE},{WHITE},{ACCENT},{OUTLINE},{BACK},"
         "1,0,0,0,100,100,0,0,1,7,4,2,80,80,620,1\n"
-        f"Style: Hook,{FONT},128,{ACCENT},{WHITE},{OUTLINE},{BACK},"
+        f"Style: Hook,{font},128,{ACCENT},{WHITE},{OUTLINE},{BACK},"
         "1,0,0,0,100,100,0,0,1,9,5,8,60,60,300,1\n\n"
         "[Events]\n"
         "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, "
@@ -569,19 +873,17 @@ def _header():
     )
 
 def _phrase_groups(words):
-    """Split the word list into fixed-size phrase windows."""
     groups = []
     for i in range(0, len(words), WORDS_PER_PHRASE):
         groups.append(words[i:i + WORDS_PER_PHRASE])
     return groups
 
-def build_ass(words, ass_path, hook=None):
-    """words: list of dicts {text, start, end} (seconds). Writes an ASS file.
-    hook: optional short ALL-CAPS title-card line shown for the first ~2.5s."""
-    lines = [_header()]
+def build_ass(words, ass_path, hook=None, font=FONT_EN, upper_hook=True):
+    lines = [_header(font)]
     if hook:
+        hook_disp = hook.upper() if upper_hook else hook
         hook_text = (r"{\fad(150,250)\fscx60\fscy60\t(0,220,\fscx104\fscy104)"
-                     r"\t(220,360,\fscx100\fscy100)}" + hook.upper())
+                     r"\t(220,360,\fscx100\fscy100)}" + hook_disp)
         lines.append(
             f"Dialogue: 0,{_ts(0.0)},{_ts(2.6)},Hook,,0,0,0,,{hook_text}\n"
         )
@@ -609,52 +911,46 @@ def build_ass(words, ass_path, hook=None):
     return ass_path
 
 def even_word_times(script_text, duration):
-    """Fallback word timings (evenly spaced) when real boundaries aren't available."""
     tokens = script_text.split()
     per = duration / max(1, len(tokens))
     return [{"text": t, "start": i * per, "end": (i + 1) * per}
             for i, t in enumerate(tokens)]
 
 # ===== voice =====
-"""Voiceover with edge-tts (free Microsoft neural voices), returning the audio
-plus real per-word timings so captions can be animated word-by-word.
+"""Language-aware voiceover with edge-tts, retried across backup voices, then
+gTTS as a last resort so Microsoft's intermittent 403s can't kill a run."""
 
-Robust against Microsoft's intermittent 403 blocks: the primary voice is
-retried, then a list of backup voices is tried, and finally gTTS is used as a
-last resort so a single outage can never kill the whole run.
-"""
-
-async def _synthesize(text, mp3_path, voice):
-    communicate = edge_tts.Communicate(text, voice, rate=TTS_RATE, pitch=TTS_PITCH)
+async def _synthesize(text, mp3_path, voice, rate, pitch):
+    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     words = []
     with open(mp3_path, "wb") as audio_file:
         async for chunk in communicate.stream():
             if chunk["type"] == "audio":
                 audio_file.write(chunk["data"])
             elif chunk["type"] == "WordBoundary":
-                start = chunk["offset"] / 1e7   # 100-ns -> seconds
+                start = chunk["offset"] / 1e7
                 dur = chunk["duration"] / 1e7
                 words.append({"text": chunk["text"], "start": start,
                               "end": start + dur})
     return words
 
-def _gtts_fallback(text, mp3_path):
-    """Last-resort voiceover via gTTS (Google). Returns [] (no word timings),
-    so captions fall back to even spacing."""
+def _gtts_fallback(text, mp3_path, gtts_lang):
     from gtts import gTTS
-    gTTS(text=text, lang="en", slow=False).save(mp3_path)
+    gTTS(text=text, lang=gtts_lang, slow=False).save(mp3_path)
     return []
 
-def make_voiceover(text, out_dir):
-    """Return (mp3_path, words) where words is a list of {text,start,end}.
-    Tries the primary edge-tts voice, then backups, then gTTS."""
+def make_voiceover(text, out_dir, lang="en"):
+    """Return (mp3_path, words). Tries the language's primary edge voice, then
+    its backups, then gTTS in that language."""
     os.makedirs(out_dir, exist_ok=True)
     mp3_path = os.path.join(out_dir, "mp3")
-    voices = [TTS_VOICE] + TTS_FALLBACK_VOICES
+    cfg = VOICE_CONFIG.get(lang, VOICE_CONFIG["en"])
+    voices = [cfg["primary"]] + cfg["backups"]
     for voice in voices:
-        for attempt in range(1, 4):   # up to 3 tries per voice
+        for attempt in range(1, 3):
             try:
-                words = asyncio.run(_synthesize(text, mp3_path, voice))
+                words = asyncio.run(_synthesize(text, mp3_path, voice,
+                                                cfg["rate"], cfg["pitch"]))
                 if os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 2000:
                     print(f"[voice] Voiceover ready ({voice}) with {len(words)} word timings.")
                     return mp3_path, words
@@ -662,10 +958,9 @@ def make_voiceover(text, out_dir):
             except Exception as e:  # noqa: BLE001
                 print(f"[voice] {voice} failed try {attempt} ({e}).")
                 time.sleep(2 * attempt)
-    # Every edge-tts voice failed (e.g. a Microsoft 403). Fall back to gTTS.
     try:
-        print("[voice] edge-tts unavailable; falling back to gTTS.")
-        words = _gtts_fallback(text, mp3_path)
+        print(f"[voice] edge-tts unavailable; falling back to gTTS ({cfg['gtts_lang']}).")
+        words = _gtts_fallback(text, mp3_path, cfg["gtts_lang"])
         print("[voice] gTTS voiceover ready (even-spaced captions).")
         return mp3_path, words
     except Exception as e:  # noqa: BLE001
@@ -673,24 +968,16 @@ def make_voiceover(text, out_dir):
         raise
 
 # ===== visuals =====
-"""Get background visuals for the video.
-
-Primary path: Pexels stock video (free API key). Downloads a few vertical
-clips matching the script's keywords.
-
-Fallback (no key / failure): generate clean animated gradient backgrounds with
-Pillow so the engine still produces a polished-looking video.
-"""
+"""Pexels stock video (free key) with an animated-gradient fallback."""
 
 PEXELS_SEARCH = "https://api.pexels.com/videos/search"
 
-# Pleasant gradient palettes for the no-key fallback (top RGB, bottom RGB).
 GRADIENTS = [
-    ((18, 22, 48), (86, 44, 120)),    # indigo -> violet
-    ((10, 30, 40), (14, 92, 110)),    # deep teal
-    ((40, 16, 32), (150, 46, 60)),    # wine -> rose
-    ((12, 28, 20), (30, 100, 70)),    # forest
-    ((26, 24, 18), (120, 84, 30)),    # amber
+    ((18, 22, 48), (86, 44, 120)),
+    ((10, 30, 40), (14, 92, 110)),
+    ((40, 16, 32), (150, 46, 60)),
+    ((12, 28, 20), (30, 100, 70)),
+    ((26, 24, 18), (120, 84, 30)),
 ]
 
 def _download_pexels(keywords, out_dir, want=4):
@@ -737,8 +1024,8 @@ def _make_gradient_backgrounds(out_dir, count=3):
     for i, (top, bottom) in enumerate(palettes):
         top_arr = np.array(top, dtype=np.float32)
         bottom_arr = np.array(bottom, dtype=np.float32)
-        t = np.linspace(0.0, 1.0, HEIGHT, dtype=np.float32)[:, None]  # (H,1)
-        col = (top_arr[None, :] + (bottom_arr - top_arr)[None, :] * t)  # (H,3)
+        t = np.linspace(0.0, 1.0, HEIGHT, dtype=np.float32)[:, None]
+        col = (top_arr[None, :] + (bottom_arr - top_arr)[None, :] * t)
         row = np.broadcast_to(col[:, None, :], (HEIGHT, WIDTH, 3))
         img = Image.fromarray(row.astype(np.uint8), "RGB")
         path = os.path.join(out_dir, f"bg_{i}.png")
@@ -748,7 +1035,6 @@ def _make_gradient_backgrounds(out_dir, count=3):
     return imgs
 
 def get_visuals(keywords, out_dir):
-    """Return a list of {type, path} visual assets."""
     os.makedirs(out_dir, exist_ok=True)
     if PEXELS_API_KEY:
         clips = _download_pexels(keywords, out_dir)
@@ -758,9 +1044,6 @@ def get_visuals(keywords, out_dir):
     return _make_gradient_backgrounds(out_dir)
 
 # ===== assemble =====
-"""Stitch visuals + voiceover + animated captions + music into a finished
-vertical short with ffmpeg."""
-
 def _run(cmd):
     subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
 
@@ -772,18 +1055,17 @@ def _probe_duration(path):
     return float(out.stdout.strip())
 
 def generate_ambient_music(duration, out_path, work_dir):
-    """Synthesize a soft, calming ambient pad in-code (no external files needed)."""
     import wave as wavmod
     sr = 44100
     n = int(duration * sr)
     t = np.linspace(0, duration, n, endpoint=False).astype(np.float32)
-    freqs = [110.0, 164.81, 220.0, 277.18]  # A2, E3, A3, C#4 — warm major
+    freqs = [110.0, 164.81, 220.0, 277.18]
     audio = np.zeros(n, dtype=np.float32)
     for i, f in enumerate(freqs):
         detune = 1.0 + 0.0015 * (i - 1.5)
         vib = 1.0 + 0.002 * np.sin(2 * np.pi * 0.07 * t + i)
         wave = np.sin(2 * np.pi * f * detune * vib * t)
-        wave += 0.22 * np.sin(2 * np.pi * 2 * f * detune * t)  # soft harmonic
+        wave += 0.22 * np.sin(2 * np.pi * 2 * f * detune * t)
         trem = 0.6 + 0.4 * np.sin(2 * np.pi * 0.05 * t + i * 1.3)
         audio += (wave * trem) * (0.9 - 0.12 * i)
     audio /= (np.max(np.abs(audio)) + 1e-9)
@@ -813,16 +1095,13 @@ def _make_scrim(work_dir):
     Image.fromarray(rgba, "RGBA").save(path)
     return path
 
-# --- background construction -------------------------------------------------
-
 GRADIENT_COLORS = [
-    ("0x030814", "0x0a2540", "0x0e7c8c"),  # deep navy -> cyan (techy)
-    ("0x05010f", "0x1b1050", "0x0e5c8c"),  # black-violet -> electric blue
-    ("0x00110f", "0x073b3a", "0x0aa0a0"),  # dark teal -> aqua
+    ("0x030814", "0x0a2540", "0x0e7c8c"),
+    ("0x05010f", "0x1b1050", "0x0e5c8c"),
+    ("0x00110f", "0x073b3a", "0x0aa0a0"),
 ]
 
 def _animated_gradient_bg(duration, out_path, work_dir):
-    """A slowly shifting multi-colour gradient — a 'living' fallback background."""
     c0, c1, c2 = random.choice(GRADIENT_COLORS)
     src = (
         f"gradients=s={WIDTH}x{HEIGHT}:c0={c0}:c1={c1}:c2={c2}:"
@@ -843,7 +1122,6 @@ def _clip_segment(path, seg_dur, out_path):
           "-c:v", "libx264", "-pix_fmt", "yuv420p", out_path])
 
 def _xfade_concat(segments, seg_dur, out_path, work_dir, xfade=0.5):
-    """Crossfade a list of equal-length clips into one continuous background."""
     if len(segments) == 1:
         _run(["ffmpeg", "-y", "-i", segments[0], "-c", "copy", out_path])
         return out_path
@@ -871,7 +1149,7 @@ def _build_background(visuals, duration, work_dir):
     videos = [v for v in visuals if v["type"] == "video"]
     if videos:
         n = len(videos)
-        seg_dur = duration / n + 0.6  # pad for crossfades
+        seg_dur = duration / n + 0.6
         segs = []
         for i, v in enumerate(videos):
             sp = os.path.join(work_dir, f"seg_{i}.mp4")
@@ -879,10 +1157,7 @@ def _build_background(visuals, duration, work_dir):
             segs.append(sp)
         _xfade_concat(segs, seg_dur, bg_path, work_dir)
         return bg_path
-    # fallback: living animated gradient
     return _animated_gradient_bg(duration, bg_path, work_dir)
-
-# --- final compose -----------------------------------------------------------
 
 def build_video(visuals, mp3_path, ass_path, out_path, work_dir, music_path=None):
     os.makedirs(work_dir, exist_ok=True)
@@ -921,43 +1196,39 @@ def build_video(visuals, mp3_path, ass_path, out_path, work_dir, music_path=None
     return out_path
 
 # ===== runner =====
-"""Daily AI video engine — orchestrates the full pipeline.
-
-Run: python dve.py
-Produces a finished vertical video in ./output plus a metadata JSON
-(title, description, hashtags) and auto-posts to YouTube / Instagram.
-"""
-
 def run():
     stamp = datetime.date.today().isoformat()
     day_dir = os.path.join(OUTPUT_DIR, stamp)
     work_dir = os.path.join(day_dir, "work")
     os.makedirs(work_dir, exist_ok=True)
 
-    # 1) today's content item (full library rotation) + part (1=morning, 2=evening)
-    entry, part = pick_content()
+    # 1) today's content item + part (1=morning/EN, 2=evening/HI) + language
+    entry, part, lang = pick_content()
 
-    # 2) script + SEO metadata
-    content = generate(entry, part)
+    # 2) script + SEO metadata in the chosen language
+    content = generate(entry, part, lang)
 
     # 3) voiceover (+ real word timings) and animated captions
-    mp3_path, words = voice_step(content["script"], work_dir)
+    mp3_path, words = voice_step(content["script"], work_dir, lang)
     if not words:
         cap_dur = _probe_duration(mp3_path)
         words = even_word_times(content["script"], cap_dur)
         print(f"[captions] no TTS word timings; using {len(words)} evenly-spaced.")
     ass_path = os.path.join(work_dir, "ass")
-    build_ass(words, ass_path, hook=content.get("hook"))
+    build_ass(words, ass_path, hook=content.get("hook"),
+              font=content.get("font", FONT_EN),
+              upper_hook=(lang == "en"))
 
     # 4) visuals
     assets = get_visuals(content["keywords"], work_dir)
 
-    # 5) background music — a soft ambient bed sized to the voiceover length
+    # 5) background music
     vdur = _probe_duration(mp3_path)
     music_path = pick_music(work_dir, vdur)
 
-    # 6) assemble (part- and key-tagged filename so posts don't clash)
-    out_path = os.path.join(day_dir, f"video_{stamp}_part{part}_{entry['key']}.mp4")
+    # 6) assemble
+    out_path = os.path.join(
+        day_dir, f"video_{stamp}_part{part}_{lang}_{entry['key']}.mp4")
     build_video(assets, mp3_path, ass_path, out_path, work_dir,
                 music_path=music_path)
 
@@ -966,8 +1237,10 @@ def run():
         "date": stamp,
         "content_key": entry["key"],
         "category": entry["category"],
-        "label": entry["label"],
+        "label": content.get("title", entry["label"]),
         "part": part,
+        "lang": lang,
+        "audio_lang": content.get("audio_lang", "en"),
         "title": content["title"],
         "description": content["description"],
         "hashtags": content["hashtags"],
@@ -976,18 +1249,16 @@ def run():
         "video_path": out_path,
     }
     meta_path = os.path.join(day_dir, f"meta_part{part}.json")
-    with open(meta_path, "w") as f:
-        json.dump(meta, f, indent=2)
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=2, ensure_ascii=False)
 
     print(f"\n[main] Done. Video: {out_path}\n[main] Meta: {meta_path}")
 
-    # 8) auto-post to YouTube (only if the 3 YT secrets are set; skips otherwise)
     try:
         upload_youtube(out_path, meta)
     except Exception as e:  # noqa: BLE001
         print(f"[youtube] upload failed ({e}); video still saved as an artifact.")
 
-    # 9) auto-post to Instagram Reels (only if the 2 IG secrets are set)
     try:
         upload_instagram(out_path, meta)
     except Exception as e:  # noqa: BLE001
@@ -1103,9 +1374,7 @@ def upload_instagram(video_path, meta):
         return None
 
 def upload_youtube(video_path, meta):
-    """Upload the finished video to YouTube as a public Short.
-    Needs GitHub Secrets: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN.
-    If any is missing, it skips quietly so the run still succeeds."""
+    """Upload the finished video to YouTube as a public Short."""
     cid = os.environ.get("YT_CLIENT_ID", "").strip()
     csec = os.environ.get("YT_CLIENT_SECRET", "").strip()
     rtok = os.environ.get("YT_REFRESH_TOKEN", "").strip()
@@ -1133,6 +1402,7 @@ def upload_youtube(video_path, meta):
         desc = desc + "\n\n#Shorts"
     tags = meta.get("tags", [])[:15]
     category_id = meta.get("category_id", "17")
+    audio_lang = meta.get("audio_lang", "en")
 
     body = {
         "snippet": {
@@ -1140,8 +1410,8 @@ def upload_youtube(video_path, meta):
             "description": desc,
             "tags": tags,
             "categoryId": category_id,
-            "defaultLanguage": "en",
-            "defaultAudioLanguage": "en",
+            "defaultLanguage": audio_lang,
+            "defaultAudioLanguage": audio_lang,
         },
         "status": {
             "privacyStatus": "public",
@@ -1157,12 +1427,10 @@ def upload_youtube(video_path, meta):
     print(f"[youtube] DONE -> https://youtube.com/shorts/{vid}")
     return vid
 
-def voice_step(script_text, work_dir):
-    # imported here so a missing edge-tts only fails at this step, not import time
-    return make_voiceover(script_text, work_dir)
+def voice_step(script_text, work_dir, lang="en"):
+    return make_voiceover(script_text, work_dir, lang)
 
 def pick_music(work_dir, duration):
-    """Use a CC0 track from ./music if present, else generate a soft ambient bed."""
     import glob
     import random
     music_dir = os.path.join(BASE_DIR, "music")
