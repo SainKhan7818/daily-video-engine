@@ -670,6 +670,573 @@ CONTENT = [
     "hashtags_extra": ["fitnessmyths", "doms", "recovery", "mythbusting"],
     "cta": "Follow to train on facts, not myths.",
 },
+# ===== original workout / diet / anatomy / mobility library (English) =====
+# ---- Chest (workout) ----
+{
+    "key": "chest", "label": "Chest Day", "emoji": CHEST,
+    "category": "workout", "style": "punchy",
+    "sub": "2 pressing moves for a bigger chest",
+    "stock_keywords": ["bench press gym close up", "push up workout",
+                       "incline dumbbell press", "chest workout gym", "cable chest fly"],
+    "hook": "CHEST DAY",
+    "script": (
+        "It's chest day, and here's what most people get wrong. "
+        "Start with a heavy press while you're fresh — flat or incline, barbell or dumbbell. "
+        "Lower the weight slow, feel the stretch across your chest, then drive up with power. "
+        "Follow it with a fly or a cable crossover to squeeze the muscle at the top. "
+        "Leave one or two reps in the tank, and add a little weight each week. "
+        "Do this right and you'll feel your chest growing within the first month. "
+        "Follow for a new session every single day."
+    ),
+    "hashtags_extra": ["chest", "chestday", "pushday", "benchpress"],
+},
+# ---- Pre-workout warmup ----
+{
+    "key": "warmup_full", "label": "Pre-Workout Warmup", "emoji": BOLT,
+    "category": "warmup", "style": "punchy",
+    "sub": "5-minute warmup before you lift",
+    "stock_keywords": ["athlete warm up gym", "dynamic stretching workout",
+                       "jumping jacks exercise", "arm circles warm up", "treadmill light jog"],
+    "hook": "WARM UP FIRST",
+    "script": (
+        "Never walk in and lift cold — this is the five-minute warmup that protects you. "
+        "Start with two minutes of light cardio to raise your heart rate and body temperature. "
+        "Then move through dynamic stretches: arm circles, leg swings, hip openers, and bodyweight squats. "
+        "Finish with two light warmup sets of your first exercise before you load it up. "
+        "This wakes up your muscles, primes your joints, and lets you lift heavier with less risk. "
+        "Skip it and you're rolling the dice on an injury. "
+        "Save this and warm up right before every session."
+    ),
+    "hashtags_extra": ["warmup", "mobility", "injuryprevention", "gymtips"],
+},
+# ---- Back (workout) ----
+{
+    "key": "back", "label": "Back Day", "emoji": FIRE,
+    "category": "workout", "style": "punchy",
+    "sub": "The pulls that build a wide, strong back",
+    "stock_keywords": ["pull up bar workout", "lat pulldown gym",
+                       "barbell row close up", "deadlift back muscles", "seated cable row"],
+    "hook": "BACK DAY",
+    "script": (
+        "Back day builds the frame that makes you look strong from every angle. "
+        "Start with a vertical pull — pull-ups or a lat pulldown — to widen your back. "
+        "Then row: a barbell row or a cable row to build thickness through the middle. "
+        "Here's the key most people miss — pull with your elbows, not your hands, and squeeze your shoulder blades together at the end. "
+        "Control the weight on the way back so your lats do the work, not your arms. "
+        "Two pulls, two rows, and you've hit everything. "
+        "Follow for your daily workout."
+    ),
+    "hashtags_extra": ["back", "backday", "pullday", "lats"],
+},
+# ---- Post-workout stretch ----
+{
+    "key": "stretch_full", "label": "Post-Workout Stretch", "emoji": STRETCH,
+    "category": "stretch", "style": "punchy",
+    "sub": "Cool-down stretch after training",
+    "stock_keywords": ["person stretching gym", "cool down stretching",
+                       "yoga stretch floor", "hamstring stretch", "shoulder stretch"],
+    "hook": "COOL DOWN",
+    "script": (
+        "Don't just drop the weights and leave — this cool-down helps you recover faster. "
+        "Hold each stretch for thirty seconds and breathe slowly, never bouncing. "
+        "Stretch the muscles you just trained: chest in a doorway, lats overhead, hamstrings and hip flexors after legs. "
+        "Static stretching after a workout helps your muscles relax and can ease next-day soreness. "
+        "It also keeps you flexible, so your joints move through a full range for years to come. "
+        "Five minutes now saves you a stiff, sore tomorrow. "
+        "Save this and stretch after every session."
+    ),
+    "hashtags_extra": ["stretching", "flexibility", "cooldown", "recovery"],
+},
+# ---- Legs (workout) ----
+{
+    "key": "legs", "label": "Leg Day", "emoji": LEG,
+    "category": "workout", "style": "punchy",
+    "sub": "Why you can't skip leg day",
+    "stock_keywords": ["barbell squat gym", "leg press machine",
+                       "walking lunges gym", "leg workout quads", "romanian deadlift"],
+    "hook": "LEG DAY",
+    "script": (
+        "Leg day is the one day you can't skip, and here's why. "
+        "Your legs are the biggest muscles in your body, so training them releases the hormones that grow your whole physique. "
+        "Start with a squat — the king of leg exercises — going as deep as you can control. "
+        "Then hit a hinge like a Romanian deadlift for your hamstrings and glutes. "
+        "Finish with lunges or a leg press, and never forget your calves. "
+        "Push hard here and everything else grows faster. "
+        "Follow for a new muscle group every day."
+    ),
+    "hashtags_extra": ["legday", "squats", "legworkout", "quads"],
+},
+# ---- Protein (diet) ----
+{
+    "key": "diet_protein", "label": "Protein Explained", "emoji": MEAT,
+    "category": "diet", "style": "edu",
+    "sub": "How much protein you actually need",
+    "stock_keywords": ["healthy protein food", "chicken breast meal prep",
+                       "eggs protein breakfast", "protein shake gym", "salmon healthy meal"],
+    "hook": "PROTEIN 101",
+    "script": (
+        "If you train hard but never grow, protein is usually the missing piece. "
+        "When you lift, you create tiny tears in your muscle fibers. Protein is the raw material your body uses to repair them bigger and stronger. "
+        "A simple target that works for most people is around 1.6 to 2.2 grams of protein per kilo of bodyweight, every day. "
+        "So if you weigh seventy kilos, that's roughly a hundred and twenty to a hundred and fifty grams. "
+        "Spread it across your meals — aim for twenty to forty grams each time — instead of cramming it all into one. "
+        "Good sources are chicken, eggs, fish, lean beef, Greek yogurt, lentils, tofu, and a scoop of whey if you fall short. "
+        "Hit your protein consistently and your training finally starts paying off. "
+        "Follow for simple nutrition that actually works."
+    ),
+    "hashtags_extra": ["protein", "nutrition", "diet", "mealprep"],
+    "cta": "Follow for simple nutrition that actually works.",
+},
+# ---- Shoulders (workout) ----
+{
+    "key": "shoulders", "label": "Shoulder Day", "emoji": LIFT,
+    "category": "workout", "style": "punchy",
+    "sub": "Build round, capped shoulders",
+    "stock_keywords": ["overhead press barbell", "lateral raise dumbbell",
+                       "shoulder workout gym", "arnold press dumbbell", "front raise gym"],
+    "hook": "SHOULDER DAY",
+    "script": (
+        "Round, capped shoulders are what make you look wide and athletic in any shirt. "
+        "Start with an overhead press — barbell or dumbbell — to build size and strength across the front and middle. "
+        "Then hammer lateral raises, because the side delt is what actually gives you width. "
+        "Go light, lead with your elbows, and control the weight down slowly — no swinging. "
+        "Finish with some rear-delt work like reverse flyes for balanced, healthy shoulders. "
+        "Most people press plenty but neglect the sides and rear — don't be one of them. "
+        "Follow for your daily session."
+    ),
+    "hashtags_extra": ["shoulders", "delts", "shoulderworkout", "pushday"],
+},
+# ---- Muscle contraction (anatomy) ----
+{
+    "key": "anatomy_contraction", "label": "How Muscles Work", "emoji": BRAIN,
+    "category": "anatomy", "style": "edu",
+    "sub": "Concentric vs eccentric explained",
+    "stock_keywords": ["bicep curl close up muscle", "muscle flexing gym",
+                       "slow motion weight lifting", "anatomy muscle fitness", "dumbbell curl form"],
+    "hook": "HOW MUSCLES MOVE",
+    "script": (
+        "Understand how a muscle actually works and you'll train smarter for the rest of your life. "
+        "Every rep has two halves. When your muscle shortens under load — like curling the weight up — that's the concentric phase, and it's the part everyone focuses on. "
+        "But when the muscle lengthens under load — lowering the weight down — that's the eccentric phase, and it's where a huge amount of your growth actually happens. "
+        "Most people rush the lowering part and waste it. Instead, take two to three seconds to lower every weight with control. "
+        "Your muscles are made of thousands of tiny fibers that slide together to create force, and controlling both halves of the rep recruits more of them. "
+        "So slow down the negative, feel the target muscle stretch and contract, and stop swinging the weight around. "
+        "Control beats ego every single time. "
+        "Follow to actually understand your training."
+    ),
+    "hashtags_extra": ["anatomy", "musclegrowth", "hypertrophy", "formcheck"],
+    "cta": "Follow to actually understand your training.",
+},
+# ---- Arms (workout) ----
+{
+    "key": "arms", "label": "Arm Day", "emoji": CHEST,
+    "category": "workout", "style": "punchy",
+    "sub": "Bigger biceps and triceps",
+    "stock_keywords": ["bicep curl dumbbell close up", "tricep pushdown cable",
+                       "barbell curl gym", "arm workout veins", "hammer curl dumbbell"],
+    "hook": "ARM DAY",
+    "script": (
+        "Want bigger arms? Then stop only training biceps. "
+        "Your triceps are two-thirds of your upper arm, so they add the most size. "
+        "Hit them with pushdowns and overhead extensions, chasing a deep stretch and a hard squeeze. "
+        "Then train biceps with curls — barbell, dumbbell, and hammer curls to hit them from every angle. "
+        "The secret is control: no swinging, full range, and a real squeeze at the top of every rep. "
+        "Keep the reps a little higher and chase the pump. "
+        "Follow for a new workout every day."
+    ),
+    "hashtags_extra": ["arms", "biceps", "triceps", "armday"],
+},
+# ---- Hip mobility (mobility) ----
+{
+    "key": "mobility_hips", "label": "Hip Mobility", "emoji": STRETCH,
+    "category": "mobility", "style": "edu",
+    "sub": "Fix tight hips for deeper squats",
+    "stock_keywords": ["hip mobility stretch", "deep squat mobility",
+                       "hip flexor stretch floor", "yoga hip opener", "mobility drill gym"],
+    "hook": "OPEN YOUR HIPS",
+    "script": (
+        "If you sit all day, your hips are probably tight — and that's wrecking your squats and your lower back. "
+        "Tight hips force your spine to round and your knees to cave, which robs your lifts and invites injury. "
+        "Here's a simple routine to fix it. Start with the deep squat hold: sink to the bottom of a squat and gently push your knees out for thirty seconds. "
+        "Next, the couch stretch to open your hip flexors — hold each side for about a minute. "
+        "Add ninety-ninety hip rotations on the floor to free up how your hips turn. "
+        "Then finish with a few slow bodyweight squats to lock in the new range. "
+        "Do this a few times a week and your squat depth, posture, and comfort all improve. "
+        "Follow for mobility that keeps you training for life."
+    ),
+    "hashtags_extra": ["mobility", "hipmobility", "flexibility", "squat"],
+    "cta": "Follow for mobility that keeps you training for life.",
+},
+# ---- Core / abs (workout) ----
+{
+    "key": "core", "label": "Core & Abs", "emoji": FIRE,
+    "category": "workout", "style": "punchy",
+    "sub": "Train abs the right way",
+    "stock_keywords": ["abs workout gym", "plank exercise", "hanging leg raise",
+                       "core training athlete", "cable crunch"],
+    "hook": "CORE DAY",
+    "script": (
+        "Your abs are a muscle, so train them with real resistance, not a thousand tiny crunches. "
+        "Start with hanging leg raises or lying leg raises for the lower abs. "
+        "Then add a weighted movement like a cable crunch, controlling the squeeze on every rep. "
+        "Finish with planks and anti-rotation holds to build a core that protects your spine under heavy lifts. "
+        "But remember — abs are revealed in the kitchen. You need a lean diet for them to show. "
+        "Train them two or three times a week, and let a calorie deficit do the rest. "
+        "Follow for your daily workout."
+    ),
+    "hashtags_extra": ["abs", "core", "sixpack", "absworkout"],
+},
+# ---- HIIT (cardio) ----
+{
+    "key": "cardio_hiit", "label": "HIIT Cardio", "emoji": RUN,
+    "category": "cardio", "style": "punchy",
+    "sub": "Burn fat in 15 minutes",
+    "stock_keywords": ["hiit training intense", "sprint running athlete",
+                       "burpees workout", "battle ropes gym", "jump squats exercise"],
+    "hook": "HIIT IT HARD",
+    "script": (
+        "Short on time but want to torch fat? This is where HIIT wins. "
+        "HIIT means high-intensity intervals — you go all-out for a short burst, then rest, and repeat. "
+        "Try thirty seconds hard, thirty seconds easy, for ten to fifteen rounds. "
+        "Use anything: sprints, a bike, jump rope, burpees, or battle ropes. "
+        "The intense bursts spike your heart rate and keep your body burning calories even after you stop. "
+        "Just two or three sessions a week is plenty — more isn't better here. "
+        "Push hard, recover, repeat. "
+        "Follow for training that fits your schedule."
+    ),
+    "hashtags_extra": ["hiit", "cardio", "fatloss", "conditioning"],
+},
+# ---- Glutes (workout) ----
+{
+    "key": "glutes", "label": "Glute Day", "emoji": FIRE,
+    "category": "workout", "style": "punchy",
+    "sub": "Build stronger glutes",
+    "stock_keywords": ["hip thrust gym", "glute bridge exercise",
+                       "barbell hip thrust", "cable kickback glutes", "bulgarian split squat"],
+    "hook": "GLUTE DAY",
+    "script": (
+        "Strong glutes aren't just about looks — they power every lift and protect your lower back. "
+        "The best glute builder is the hip thrust, so start there and drive through your heels, squeezing hard at the top. "
+        "Then add Bulgarian split squats to train each side and fix imbalances. "
+        "Finish with cable kickbacks or glute bridges for a deep contraction. "
+        "The key is squeezing your glutes at the top of every rep — mind-muscle connection matters here more than heavy weight. "
+        "Train them twice a week and progress the load. "
+        "Follow for your daily session."
+    ),
+    "hashtags_extra": ["glutes", "hipthrust", "gluteworkout", "legday"],
+},
+# ---- Pre-workout meal (diet) ----
+{
+    "key": "diet_preworkout", "label": "Pre-Workout Meal", "emoji": BROC,
+    "category": "diet", "style": "edu",
+    "sub": "What to eat before you train",
+    "stock_keywords": ["healthy meal rice chicken", "banana pre workout",
+                       "oatmeal breakfast bowl", "meal prep healthy", "smoothie fruit"],
+    "hook": "EAT TO PERFORM",
+    "script": (
+        "What you eat before training decides how much energy and strength you'll have. "
+        "Aim to eat a proper meal about one to two hours before you lift. "
+        "Focus on two things: carbs for energy and protein to protect your muscle. "
+        "Good options are rice with chicken, oats with yogurt, or a banana with a protein shake. "
+        "Carbs top up the fuel your muscles burn during hard sets, so you can push more reps and lift heavier. "
+        "Keep fats and heavy fiber lower right before training, since they slow digestion and can leave you feeling sluggish. "
+        "If you're short on time, even a banana and a shake fifteen minutes before is far better than training on empty. "
+        "Fuel the work, and the work pays you back. "
+        "Follow for nutrition made simple."
+    ),
+    "hashtags_extra": ["preworkout", "nutrition", "diet", "energy"],
+    "cta": "Follow for nutrition made simple.",
+},
+# ---- Full-body (workout) ----
+{
+    "key": "fullbody", "label": "Full-Body Workout", "emoji": BOLT,
+    "category": "workout", "style": "punchy",
+    "sub": "Train everything in one session",
+    "stock_keywords": ["full body workout gym", "functional training",
+                       "kettlebell workout", "compound lift gym", "athlete training hard"],
+    "hook": "FULL BODY",
+    "script": (
+        "Only training a few days a week? A full-body session is the most efficient way to grow. "
+        "Pick one big move per major muscle group. A squat for legs, a bench or push-up for chest, a row or pull-up for back, and an overhead press for shoulders. "
+        "Do three to four sets of each, leaving a rep or two in the tank. "
+        "Because you hit every muscle in one workout, you can train each one two or three times a week — and that frequency drives growth. "
+        "Add a little weight or a rep every session and stay consistent. "
+        "This is how busy people still build a great physique. "
+        "Follow for smart, simple training."
+    ),
+    "hashtags_extra": ["fullbody", "workout", "strength", "compound"],
+},
+# ---- Rest & recovery (recovery) ----
+{
+    "key": "recovery_rest", "label": "Rest & Recovery", "emoji": SLEEP,
+    "category": "recovery", "style": "edu",
+    "sub": "Why rest days grow muscle",
+    "stock_keywords": ["person resting relaxing", "stretching recovery",
+                       "sleep bedroom calm", "foam rolling recovery", "walking outdoor nature"],
+    "hook": "REST TO GROW",
+    "script": (
+        "Here's the truth that gym addicts hate to hear — you don't grow in the gym, you grow when you rest. "
+        "Training is the stimulus. It breaks your muscle down. The actual repair and growth happen afterward, while you recover. "
+        "If you train the same muscle hard every day without rest, you never give it the chance to rebuild, and progress stalls. "
+        "Aim for at least one or two full rest days a week, and give each muscle group about forty-eight hours before you hammer it again. "
+        "Rest days don't have to mean lying down — a walk, a light stretch, or some easy mobility all help you recover. "
+        "And manage your stress, because a stressed body repairs slowly. "
+        "Respect recovery and you'll grow faster than the person who never takes a day off. "
+        "Follow for training that actually works."
+    ),
+    "hashtags_extra": ["recovery", "restday", "musclegrowth", "overtraining"],
+    "cta": "Follow for training that actually works.",
+},
+# ---- Chest anatomy (anatomy) ----
+{
+    "key": "anatomy_chest", "label": "Chest Anatomy", "emoji": BRAIN,
+    "category": "anatomy", "style": "edu",
+    "sub": "How the bench press really works",
+    "stock_keywords": ["bench press form gym", "chest muscle anatomy",
+                       "incline press close up", "pushup muscle", "cable fly chest"],
+    "hook": "INSIDE THE PRESS",
+    "script": (
+        "Ever wonder why some people press for years and still have a flat chest? It's because they don't understand the muscle. "
+        "Your chest — the pectoralis major — has two main regions: an upper part that runs up toward your collarbone, and a larger lower part. "
+        "Its job is to bring your arms across and in front of your body, and that's exactly what a press or a fly does. "
+        "A flat press hits the mid and lower chest, while an incline press shifts the work to that stubborn upper chest most people are missing. "
+        "To actually grow it, think about driving your arms together, not just pushing the weight up. Feel the stretch at the bottom and the squeeze at the top. "
+        "Train it from a couple of angles — flat, incline, and a fly for the stretch — and control every rep. "
+        "Understand the muscle, and you'll finally build it. "
+        "Follow to train with your brain, not just your ego."
+    ),
+    "hashtags_extra": ["anatomy", "chest", "benchpress", "hypertrophy"],
+    "cta": "Follow to train with your brain, not just your ego.",
+},
+# ---- Warmup for legs (warmup) ----
+{
+    "key": "warmup_legs", "label": "Leg Day Warmup", "emoji": BOLT,
+    "category": "warmup", "style": "punchy",
+    "sub": "Prime your legs before squats",
+    "stock_keywords": ["leg warm up gym", "bodyweight squat warm up",
+                       "leg swings stretch", "glute activation exercise", "lunge warm up"],
+    "hook": "PRIME YOUR LEGS",
+    "script": (
+        "Never load a heavy squat with cold legs — do this three-minute prep first. "
+        "Start with leg swings, front to back and side to side, to loosen your hips. "
+        "Then wake up your glutes with a set of glute bridges or banded walks, so they actually fire under the bar. "
+        "Do twenty bodyweight squats, sinking a little deeper each rep to open your range. "
+        "Then ramp up with light warmup sets before your working weight — never jump straight to heavy. "
+        "This primes your muscles, grooves your form, and lets you squat deeper and safer. "
+        "Save this for your next leg day."
+    ),
+    "hashtags_extra": ["warmup", "legday", "squat", "activation"],
+},
+# ---- Back anatomy (anatomy) ----
+{
+    "key": "anatomy_back", "label": "Back Anatomy", "emoji": BRAIN,
+    "category": "anatomy", "style": "edu",
+    "sub": "Why you can't feel your lats",
+    "stock_keywords": ["lat pulldown muscle", "back muscle anatomy",
+                       "pull up back muscles", "row exercise back", "muscular back flex"],
+    "hook": "FEEL YOUR BACK",
+    "script": (
+        "If you train back but only feel it in your arms, this is for you. "
+        "Your lats are the big fan-shaped muscles that give your back its width. They run from your upper arm down to your lower spine. "
+        "Their job is to pull your arms down and back toward your body — that's every pulldown, pull-up, and row. "
+        "The reason most people can't feel them is simple: they pull with their hands and biceps instead of their elbows. "
+        "Here's the fix. Think about driving your elbows down and back, like putting them in your back pockets, and let your hands just be hooks. "
+        "Pause for a second at the bottom of each rep and squeeze your shoulder blades together. "
+        "Slow the weight down on the way back so the lats stay under tension. "
+        "Master that mind-muscle connection and your back finally starts to grow. "
+        "Follow to understand every muscle you train."
+    ),
+    "hashtags_extra": ["anatomy", "back", "lats", "mindmuscle"],
+    "cta": "Follow to understand every muscle you train.",
+},
+# ---- Hamstring stretch (stretch) ----
+{
+    "key": "stretch_hamstring", "label": "Hamstring Stretch", "emoji": STRETCH,
+    "category": "stretch", "style": "punchy",
+    "sub": "Loosen tight hamstrings",
+    "stock_keywords": ["hamstring stretch floor", "forward fold stretch",
+                       "seated stretch legs", "yoga stretch hamstring", "flexibility training"],
+    "hook": "LOOSEN UP",
+    "script": (
+        "Tight hamstrings pull on your lower back and limit almost every lift — here's how to loosen them safely. "
+        "Never bounce into a stretch. Ease in slowly and hold each position for thirty seconds while you breathe out. "
+        "Try a standing forward fold, letting your head hang and knees soft. "
+        "Then a seated single-leg reach, keeping your back long instead of rounding over. "
+        "Finish with a lying hamstring stretch using a band or towel around your foot. "
+        "Do this after training or on rest days, and your squats, deadlifts, and posture all improve. "
+        "Save this and use it a few times a week."
+    ),
+    "hashtags_extra": ["stretching", "flexibility", "hamstrings", "mobility"],
+},
+# ---- Fat loss basics (diet) ----
+{
+    "key": "diet_fatloss", "label": "Fat Loss Basics", "emoji": DROP,
+    "category": "diet", "style": "edu",
+    "sub": "The one rule of losing fat",
+    "stock_keywords": ["healthy food vegetables", "meal prep containers",
+                       "weighing food scale", "salad healthy bowl", "person cooking healthy"],
+    "hook": "FAT LOSS 101",
+    "script": (
+        "Forget the magic teas and fad diets — fat loss comes down to one rule. "
+        "You have to burn more calories than you eat. That's called a calorie deficit, and nothing works without it. "
+        "But you don't want to just lose weight — you want to lose fat and keep your muscle. "
+        "So keep your protein high, because it protects your muscle while you diet and keeps you full. "
+        "Aim for a small, steady deficit — losing around half a kilo a week — instead of starving yourself, which only burns muscle and backfires. "
+        "Fill your plate with vegetables, lean protein, and whole foods that keep you satisfied on fewer calories. "
+        "And keep training hard, so your body has a reason to hold onto muscle. "
+        "Slow and steady wins, every time. "
+        "Follow for nutrition without the nonsense."
+    ),
+    "hashtags_extra": ["fatloss", "diet", "caloriedeficit", "weightloss"],
+    "cta": "Follow for nutrition without the nonsense.",
+},
+# ---- Zone-2 cardio (cardio) ----
+{
+    "key": "cardio_zone2", "label": "Zone-2 Cardio", "emoji": RUN,
+    "category": "cardio", "style": "edu",
+    "sub": "The easy cardio that works",
+    "stock_keywords": ["person walking incline", "steady cycling gym",
+                       "jogging outdoor park", "treadmill walking", "rowing machine cardio"],
+    "hook": "GO SLOW TO WIN",
+    "script": (
+        "Not all cardio has to leave you gasping. The easy kind might be the most underrated tool you have. "
+        "It's called zone two — a pace where you're working, but you could still hold a conversation. "
+        "Think a brisk incline walk, an easy bike ride, or a steady row for thirty to forty-five minutes. "
+        "At this pace your body gets better at burning fat for fuel and builds a stronger, healthier heart. "
+        "Because it's low intensity, it doesn't beat up your muscles or wreck your recovery like sprint work can. "
+        "That means you can do it several times a week on top of your lifting without burning out. "
+        "It's boring, it's simple, and it quietly transforms your fitness. "
+        "Follow for training that keeps you healthy for life."
+    ),
+    "hashtags_extra": ["cardio", "zone2", "fatloss", "endurance"],
+    "cta": "Follow for training that keeps you healthy for life.",
+},
+# ---- Shoulder mobility (mobility) ----
+{
+    "key": "mobility_shoulders", "label": "Shoulder Mobility", "emoji": STRETCH,
+    "category": "mobility", "style": "edu",
+    "sub": "Fix stiff, achy shoulders",
+    "stock_keywords": ["shoulder mobility stretch", "band shoulder exercise",
+                       "arm circles mobility", "shoulder stretch wall", "mobility drill athlete"],
+    "hook": "HEALTHY SHOULDERS",
+    "script": (
+        "Achy shoulders that click and pinch when you press? Your mobility is probably the problem. "
+        "Your shoulder is the most mobile joint in your body, which also makes it the easiest to mess up when it gets stiff. "
+        "Start with band pull-aparts to wake up the muscles that hold your shoulder blades in place. "
+        "Then do shoulder dislocates with a band or a broomstick — slow, controlled circles over your head to open the joint. "
+        "Add a wall slide, keeping your arms and back flat against the wall as you reach up. "
+        "Do these before pressing and a few times a week, and your shoulders move better and hurt less. "
+        "Strong shoulders start with mobile shoulders. "
+        "Follow for mobility that keeps you lifting pain-free."
+    ),
+    "hashtags_extra": ["mobility", "shoulders", "shouldermobility", "painfree"],
+    "cta": "Follow for mobility that keeps you lifting pain-free.",
+},
+# ---- Post-workout nutrition (diet) ----
+{
+    "key": "diet_postworkout", "label": "Post-Workout Food", "emoji": BROC,
+    "category": "diet", "style": "edu",
+    "sub": "What to eat after training",
+    "stock_keywords": ["protein shake after workout", "healthy meal chicken rice",
+                       "greek yogurt bowl", "post workout meal", "eggs toast breakfast"],
+    "hook": "REFUEL RIGHT",
+    "script": (
+        "You just finished training — what you eat now helps you recover and grow. "
+        "After a hard session, your muscles are primed to soak up nutrients and start repairing. "
+        "The two things you want are protein to rebuild muscle and carbs to refill your energy stores. "
+        "A simple post-workout meal is chicken and rice, a protein shake with a banana, or Greek yogurt with fruit and oats. "
+        "You don't need to panic and eat within seconds — the old thirty-minute window is a myth — but getting a solid meal in within a couple of hours is smart. "
+        "What matters most is that you hit your total protein and calories for the whole day. "
+        "Train hard, then feed the recovery. "
+        "Follow for nutrition that actually moves the needle."
+    ),
+    "hashtags_extra": ["postworkout", "nutrition", "recovery", "protein"],
+    "cta": "Follow for nutrition that actually moves the needle.",
+},
+# ---- Mind-muscle connection (anatomy) ----
+{
+    "key": "anatomy_mindmuscle", "label": "Mind-Muscle Link", "emoji": BRAIN,
+    "category": "anatomy", "style": "edu",
+    "sub": "The trick that doubles your gains",
+    "stock_keywords": ["focused lifting gym", "slow controlled rep",
+                       "muscle contraction close up", "bicep squeeze", "concentration curl"],
+    "hook": "MIND OVER MUSCLE",
+    "script": (
+        "Two people can do the exact same exercise and get completely different results. The difference is often the mind-muscle connection. "
+        "Your brain controls your muscles through nerve signals. The better you focus on a muscle, the more of its fibers you actually recruit during a rep. "
+        "When you just heave a weight from A to B, other muscles take over and the one you're trying to grow barely works. "
+        "The fix is to slow down and consciously feel the target muscle stretching and squeezing on every single rep. "
+        "Lighten the weight if you have to. A lighter set you truly feel beats a heavy set you just swing. "
+        "Squeeze hard at the peak of each rep and hold it for a beat. "
+        "Train the muscle, not the movement, and your results change fast. "
+        "Follow to get more from every set you do."
+    ),
+    "hashtags_extra": ["mindmuscle", "hypertrophy", "gymtips", "musclegrowth"],
+    "cta": "Follow to get more from every set you do.",
+},
+# ---- Sleep & muscle (recovery) ----
+{
+    "key": "recovery_sleep", "label": "Sleep & Gains", "emoji": SLEEP,
+    "category": "recovery", "style": "edu",
+    "sub": "The most underrated supplement",
+    "stock_keywords": ["sleep bedroom calm", "person sleeping rest",
+                       "relaxing evening calm", "night sky calm", "waking up morning"],
+    "hook": "SLEEP = GAINS",
+    "script": (
+        "The most powerful muscle-building supplement is free, and you do it every night — or you should. "
+        "While you sleep, your body releases most of its growth hormone and does the heavy lifting of repairing the muscle you trained. "
+        "Skimp on sleep and you blunt recovery, lose strength, feel hungrier, and hold onto more fat. "
+        "Aim for seven to nine hours a night, and try to keep a consistent schedule, even on weekends. "
+        "Keep your room dark and cool, and get off your phone before bed, because screen light delays the sleep your muscles need. "
+        "You can train perfectly and eat perfectly, but if you sleep badly, you leave most of your gains on the table. "
+        "Treat sleep like part of your program, not an afterthought. "
+        "Follow for the fundamentals that actually build muscle."
+    ),
+    "hashtags_extra": ["sleep", "recovery", "musclegrowth", "health"],
+    "cta": "Follow for the fundamentals that actually build muscle.",
+},
+# ---- Muscle-building diet (diet) ----
+{
+    "key": "diet_bulk", "label": "Muscle-Building Diet", "emoji": MEAT,
+    "category": "diet", "style": "edu",
+    "sub": "How to eat to build muscle",
+    "stock_keywords": ["healthy big meal", "meal prep bodybuilding",
+                       "rice chicken vegetables", "protein foods table", "cooking healthy food"],
+    "hook": "EAT TO GROW",
+    "script": (
+        "You can't build a bigger body on a diet that keeps you the same size. To grow muscle, you have to eat for it. "
+        "Muscle is built from a small calorie surplus — eating slightly more than you burn — paired with hard training. "
+        "Add roughly two to three hundred calories above your maintenance level, so you gain slowly without piling on fat. "
+        "Keep protein high, around two grams per kilo of bodyweight, to give your muscles the building blocks they need. "
+        "Fill the rest with quality carbs like rice, oats, and potatoes for training energy, plus healthy fats for your hormones. "
+        "Eat consistently across the day and don't skip meals — muscle is built with steady fuel, not one big binge. "
+        "Be patient. Real muscle comes slowly, but it stays. "
+        "Follow for nutrition that builds a better body."
+    ),
+    "hashtags_extra": ["bulking", "diet", "musclegain", "nutrition"],
+    "cta": "Follow for nutrition that builds a better body.",
+},
+# ---- Leg anatomy (anatomy) ----
+{
+    "key": "anatomy_legs", "label": "Leg Anatomy", "emoji": BRAIN,
+    "category": "anatomy", "style": "edu",
+    "sub": "What a squat actually trains",
+    "stock_keywords": ["squat form muscle", "leg muscle anatomy",
+                       "quad muscle gym", "squat close up legs", "athlete squatting"],
+    "hook": "INSIDE THE SQUAT",
+    "script": (
+        "The squat is called the king of exercises, but do you know what it actually trains? "
+        "Your legs have three big players. The quads on the front of your thigh straighten your knee. The hamstrings on the back bend it and help your hips. And your glutes drive your hips forward. "
+        "In a squat, you lower by bending your knees and hips together, and all three fire to stand you back up. "
+        "How you squat shifts the emphasis. A more upright squat with a deep knee bend hits the quads harder, while sitting your hips back loads the glutes and hamstrings more. "
+        "Going deeper — to at least parallel — recruits far more muscle than a shallow quarter squat. "
+        "And bracing your core keeps your spine safe under the load. "
+        "Understand what's working, and you'll squat with purpose instead of just moving weight. "
+        "Follow to understand every rep you do."
+    ),
+    "hashtags_extra": ["anatomy", "legs", "squat", "quads"],
+    "cta": "Follow to understand every rep you do.",
+},
 ]
 
 # --- Paths ---
@@ -739,7 +1306,7 @@ def pick_content():
     days = (datetime.date.today() - EPOCH).days
     slot = days * 2 + (part - 1)        # monotonic post number (…,N,N+1,…)
     topic_idx = slot % len(CONTENT)
-    lang = "en" if part == 1 else "hi"
+    lang = "en"  # English-only model (Hindi retired)
     entry = CONTENT[topic_idx]
     print(f"[topics] {entry['label']} | {entry['category']} | Part {part} "
           f"| lang {lang} | idx {topic_idx}/{len(CONTENT)}")
