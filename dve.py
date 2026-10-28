@@ -1237,6 +1237,462 @@ CONTENT = [
     "hashtags_extra": ["anatomy", "legs", "squat", "quads"],
     "cta": "Follow to understand every rep you do.",
 },
+# ===== idea-bank batch 1 (activated Oct 2026) =====
+{
+    "key": "ranked_biceps", "label": "Biceps Exercises Ranked", "emoji": TROPHY,
+    "category": "ranked", "style": "punchy",
+    "sub": "Top 3 moves for bigger biceps",
+    "stock_keywords": ["bicep curl dumbbell close up", "barbell curl gym",
+                       "hammer curl dumbbell", "preacher curl bench", "concentration curl gym"],
+    "hook": "BICEPS, RANKED",
+    "script": (
+        "The three best biceps exercises, ranked. "
+        "Number three: the hammer curl. It builds the outer bicep and the forearm, adding thickness to the whole arm. "
+        "Number two: the incline dumbbell curl. Your arms hang back, putting the long head on a deep stretch where it grows the most. "
+        "And number one: the barbell curl. Nothing lets you load the biceps heavier, and heavy curls with strict form build real size. "
+        "The rule for all three: no swinging, control the weight down, and squeeze hard at the top. "
+        "Follow for a new ranking every day."
+    ),
+    "hashtags_extra": ["biceps", "arms", "armday", "ranked"],
+},
+{
+    "key": "ranked_triceps", "label": "Triceps Exercises Ranked", "emoji": TROPHY,
+    "category": "ranked", "style": "punchy",
+    "sub": "Top 3 moves for bigger triceps",
+    "stock_keywords": ["tricep pushdown cable", "overhead tricep extension",
+                       "skullcrusher barbell", "close grip bench press", "tricep dip gym"],
+    "hook": "TRICEPS, RANKED",
+    "script": (
+        "Your triceps are two-thirds of your arm, so here are the three best exercises, ranked. "
+        "Number three: the cable pushdown. Constant tension and an easy squeeze make it perfect for finishing your triceps off. "
+        "Number two: the close-grip bench press. A heavy compound that lets you overload the triceps with real weight. "
+        "And number one: the overhead extension. Raising your arms overhead puts the long head on a huge stretch, where most of your arm size comes from. "
+        "Press heavy, stretch hard, and grow. "
+        "Follow for a new ranking every day."
+    ),
+    "hashtags_extra": ["triceps", "arms", "armday", "ranked"],
+},
+{
+    "key": "ranked_abs", "label": "Ab Exercises Ranked", "emoji": TROPHY,
+    "category": "ranked", "style": "punchy",
+    "sub": "Top 3 moves for stronger abs",
+    "stock_keywords": ["hanging leg raise gym", "cable crunch abs",
+                       "plank exercise", "ab workout gym", "hollow hold core"],
+    "hook": "ABS, RANKED",
+    "script": (
+        "The three best ab exercises, ranked. Remember, abs are built here but revealed in the kitchen. "
+        "Number three: the plank and its variations, which build the deep core that protects your spine under heavy lifts. "
+        "Number two: the cable crunch. Abs are a muscle, so adding weight and crunching against resistance builds them thicker. "
+        "And number one: the hanging leg raise. The best move for the lower abs everyone struggles to develop, done slow and controlled. "
+        "Train abs two or three times a week, and stay lean to see them. "
+        "Follow for a new ranking every day."
+    ),
+    "hashtags_extra": ["abs", "core", "sixpack", "ranked"],
+},
+{
+    "key": "howto_squat", "label": "How to Squat Properly", "emoji": LIFT,
+    "category": "howto", "style": "edu",
+    "sub": "Perfect squat form",
+    "stock_keywords": ["barbell squat form gym", "squat depth close up",
+                       "person squatting gym", "squat rack training", "bracing squat"],
+    "hook": "PERFECT YOUR SQUAT",
+    "script": (
+        "Here's how to squat with perfect form, step by step. "
+        "Set the bar on your upper back, grip it tight, and brace your core like you're about to take a punch. "
+        "Stand with your feet about shoulder-width apart, toes slightly out. "
+        "Now sit down and back at the same time, pushing your knees out in line with your toes. "
+        "Go down until your hips drop at least to the level of your knees, keeping your chest up and your heels flat. "
+        "Then drive straight up through the whole foot. "
+        "Brace, break at the hips and knees together, hit depth, and stand tall. "
+        "Follow for a how-to every day."
+    ),
+    "hashtags_extra": ["squat", "howto", "formcheck", "legday"],
+    "cta": "Follow for a how-to every day.",
+},
+{
+    "key": "howto_deadlift", "label": "How to Deadlift Properly", "emoji": LIFT,
+    "category": "howto", "style": "edu",
+    "sub": "Perfect deadlift form",
+    "stock_keywords": ["deadlift form gym", "barbell deadlift close up",
+                       "person deadlifting", "conventional deadlift", "deadlift setup gym"],
+    "hook": "PERFECT YOUR DEADLIFT",
+    "script": (
+        "Here's how to deadlift safely and strongly, step by step. "
+        "Stand with the bar over the middle of your feet, about hip-width apart. "
+        "Push your hips back, bend down, and grip the bar just outside your legs. "
+        "Now the key: drop your hips, lift your chest, and pull the slack out of the bar until your back is flat and tight. "
+        "Brace your core, then push the floor away and stand up, keeping the bar dragging close to your body the whole way. "
+        "Lock out by squeezing your glutes — don't lean back. "
+        "Flat back, bar close, drive through your legs. "
+        "Follow for a how-to every day."
+    ),
+    "hashtags_extra": ["deadlift", "howto", "formcheck", "backday"],
+    "cta": "Follow for a how-to every day.",
+},
+{
+    "key": "howto_bench", "label": "How to Bench Press Properly", "emoji": LIFT,
+    "category": "howto", "style": "edu",
+    "sub": "Perfect bench press form",
+    "stock_keywords": ["bench press form gym", "barbell bench close up",
+                       "person bench pressing", "flat bench chest", "spotter bench press"],
+    "hook": "PERFECT YOUR BENCH",
+    "script": (
+        "Here's how to bench press properly and protect your shoulders. "
+        "Lie back, pull your shoulder blades down and together, and keep a slight arch in your upper back. "
+        "Grip the bar a bit wider than shoulder-width, and plant your feet hard into the floor. "
+        "Unrack it, then lower the bar with control to your lower chest, keeping your elbows tucked at about forty-five degrees, not flared out. "
+        "Touch your chest lightly, then drive the bar up and slightly back toward your face. "
+        "Squeeze your chest at the top. "
+        "Tuck the elbows, touch the chest, press with power. "
+        "Follow for a how-to every day."
+    ),
+    "hashtags_extra": ["benchpress", "howto", "formcheck", "chestday"],
+    "cta": "Follow for a how-to every day.",
+},
+{
+    "key": "howto_ohp", "label": "How to Overhead Press", "emoji": LIFT,
+    "category": "howto", "style": "edu",
+    "sub": "Perfect overhead press form",
+    "stock_keywords": ["overhead press barbell gym", "standing shoulder press",
+                       "military press close up", "dumbbell shoulder press", "press lockout gym"],
+    "hook": "PERFECT YOUR PRESS",
+    "script": (
+        "Here's how to overhead press for strong, healthy shoulders. "
+        "Hold the bar at your collarbone, hands just outside your shoulders, elbows slightly in front of the bar. "
+        "Squeeze your glutes and brace your core so you don't lean back and hurt your lower back. "
+        "Now press the bar straight up, and as it passes your face, move your head slightly forward so the bar finishes right over the middle of your body. "
+        "Lock out with your biceps near your ears. "
+        "Then lower it back under control to your collarbone. "
+        "Brace, press up and back, finish over your spine. "
+        "Follow for a how-to every day."
+    ),
+    "hashtags_extra": ["overheadpress", "shoulders", "howto", "formcheck"],
+    "cta": "Follow for a how-to every day.",
+},
+{
+    "key": "stop_lateralraise", "label": "Stop Doing Lateral Raises Like This", "emoji": CROSS,
+    "category": "howto", "style": "edu",
+    "sub": "Fix your side-delt raises",
+    "stock_keywords": ["lateral raise dumbbell close up", "side delt raise gym",
+                       "shoulder raise form", "light dumbbell raise", "delt workout gym"],
+    "hook": "STOP RAISING WRONG",
+    "script": (
+        "If your lateral raises aren't building wider shoulders, you're probably making these mistakes. "
+        "Mistake one: going too heavy and swinging the weight up with your whole body. Your traps take over and your side delts barely work. "
+        "Mistake two: leading with your hands. Instead, lead with your elbows and keep a slight bend in them the whole time. "
+        "Mistake three: dropping the weight fast. Control it down slowly — that's where the muscle is built. "
+        "Go lighter than your ego wants, raise only to shoulder height, and feel the side delt do the work. "
+        "Three sets of fifteen, and your shoulders finally start to widen. "
+        "Follow to fix a lift every day."
+    ),
+    "hashtags_extra": ["lateralraise", "shoulders", "formcheck", "gymtips"],
+    "cta": "Follow to fix a lift every day.",
+},
+{
+    "key": "stop_squat", "label": "Stop Squatting Like This", "emoji": CROSS,
+    "category": "howto", "style": "edu",
+    "sub": "Common squat mistakes",
+    "stock_keywords": ["squat mistake gym", "knee cave squat",
+                       "shallow squat gym", "squat form check", "person squatting barbell"],
+    "hook": "STOP SQUATTING WRONG",
+    "script": (
+        "These three squat mistakes are stealing your gains and risking your knees and back. "
+        "Mistake one: your knees caving in. Push them out in line with your toes as you stand up. "
+        "Mistake two: quarter squats. Cutting depth looks impressive with heavy weight, but going at least to parallel builds far more muscle. "
+        "Mistake three: your chest collapsing forward. Brace your core hard and keep your chest proud the whole way. "
+        "Fix these by dropping the weight, bracing tight, pushing your knees out, and hitting real depth on every rep. "
+        "Ego lifting builds nothing but injuries. "
+        "Follow to fix a lift every day."
+    ),
+    "hashtags_extra": ["squat", "formcheck", "legday", "gymtips"],
+    "cta": "Follow to fix a lift every day.",
+},
+{
+    "key": "mistakes_chest", "label": "5 Chest Training Mistakes", "emoji": FIRE,
+    "category": "workout", "style": "edu",
+    "sub": "Why your chest won't grow",
+    "stock_keywords": ["bench press gym", "chest workout mistake",
+                       "incline press gym", "cable fly chest", "pushup chest"],
+    "hook": "CHEST NOT GROWING?",
+    "script": (
+        "Five mistakes keeping your chest flat. "
+        "One: only ever flat benching. Add an incline press to build the upper chest most people are missing. "
+        "Two: bouncing the bar off your chest. Lower it with control and feel the stretch instead. "
+        "Three: flaring your elbows out wide, which hits your shoulders more than your chest. Tuck them a little. "
+        "Four: half reps. Use a full range, from a deep stretch to a hard squeeze. "
+        "Five: never adding weight or reps. Your chest only grows if you give it more over time. "
+        "Fix these and your chest finally starts to build. "
+        "Follow for your daily training."
+    ),
+    "hashtags_extra": ["chest", "chestday", "gymtips", "mistakes"],
+    "cta": "Follow for your daily training.",
+},
+{
+    "key": "mistakes_back", "label": "5 Back Training Mistakes", "emoji": FIRE,
+    "category": "workout", "style": "edu",
+    "sub": "Why your back won't grow",
+    "stock_keywords": ["lat pulldown gym", "barbell row back",
+                       "pull up gym", "cable row back", "back workout gym"],
+    "hook": "BACK NOT GROWING?",
+    "script": (
+        "Five mistakes killing your back gains. "
+        "One: pulling with your arms. Drive your elbows down and back and let your lats do the work, not your biceps. "
+        "Two: using too much weight and swinging. Lighten up and control every rep. "
+        "Three: no squeeze. Pause for a second and squeeze your shoulder blades together at the bottom of every pull. "
+        "Four: only doing one movement. You need vertical pulls for width and rows for thickness. "
+        "Five: rushing the stretch. Let your lats fully lengthen at the top of each rep. "
+        "Fix these and your back finally starts to widen. "
+        "Follow for your daily training."
+    ),
+    "hashtags_extra": ["back", "backday", "lats", "mistakes"],
+    "cta": "Follow for your daily training.",
+},
+{
+    "key": "myth_carbs", "label": "Carbs Myth", "emoji": CROSS,
+    "category": "myth", "style": "edu",
+    "sub": "Carbs don't make you fat",
+    "stock_keywords": ["rice healthy meal", "oats breakfast bowl",
+                       "potato healthy food", "carbs food table", "meal prep rice"],
+    "hook": "MYTH BUSTED",
+    "script": (
+        "Myth: carbs make you fat. Let's bust it. "
+        "Carbs do not make you fat. Eating more calories than you burn makes you fat, whether those calories come from carbs, fat, or protein. "
+        "Carbs are actually your body's main fuel for hard training. Cut them too low and your workouts, energy, and mood all crash. "
+        "The real issue is the type and amount. Base your carbs on rice, oats, potatoes, fruit, and whole grains, and keep your total calories in check. "
+        "Fit people all over the world eat carbs every day and stay lean. "
+        "So don't fear rice or roti — just manage your portions. "
+        "Follow to eat on facts, not fear."
+    ),
+    "hashtags_extra": ["carbs", "nutritionmyths", "diet", "mythbusting"],
+    "cta": "Follow to eat on facts, not fear.",
+},
+{
+    "key": "myth_nopain", "label": "No Pain No Gain Myth", "emoji": CROSS,
+    "category": "myth", "style": "edu",
+    "sub": "Pain isn't the goal",
+    "stock_keywords": ["gym training hard", "athlete tired workout",
+                       "recovery stretch gym", "focused lifting gym", "gym rest"],
+    "hook": "MYTH BUSTED",
+    "script": (
+        "Myth: no pain, no gain. Let's bust it. "
+        "Real muscle growth comes from hard, progressive training and good recovery — not from pain. "
+        "There's a difference between effort and pain. Pushing a set close to failure is effort, and that's good. Sharp joint pain or training through an injury is a warning sign, and that's bad. "
+        "Chasing soreness and beating yourself up every session just wrecks your recovery and stalls your progress. "
+        "Train hard, yes, but leave the ego and the pain behind. Progress your weights, recover well, and let the results come. "
+        "Smart and consistent always beats brutal and broken. "
+        "Follow to train on facts, not myths."
+    ),
+    "hashtags_extra": ["gymmyths", "recovery", "mythbusting", "gymtips"],
+    "cta": "Follow to train on facts, not myths.",
+},
+{
+    "key": "myth_supplements", "label": "Supplements Myth", "emoji": CROSS,
+    "category": "myth", "style": "edu",
+    "sub": "You don't need supplements to grow",
+    "stock_keywords": ["protein shake gym", "supplements table",
+                       "healthy whole foods", "creatine scoop", "meal prep protein"],
+    "hook": "MYTH BUSTED",
+    "script": (
+        "Myth: you need supplements to build muscle. Let's bust it. "
+        "Supplements are called supplements because they add to a good diet — they don't replace it. "
+        "You can build an impressive physique on whole foods alone: enough protein, enough calories, and hard training. That's ninety-five percent of the result. "
+        "Only a couple of supplements are actually worth it. Protein powder is just a convenient way to hit your protein, and creatine is cheap and genuinely helps strength. "
+        "The rest — fat burners, test boosters, fancy pills — are mostly a waste of money. "
+        "Nail your food and training first. "
+        "Follow to spend smart, not get scammed."
+    ),
+    "hashtags_extra": ["supplements", "nutritionmyths", "creatine", "mythbusting"],
+    "cta": "Follow to spend smart, not get scammed.",
+},
+{
+    "key": "science_volume", "label": "How Much Training Volume", "emoji": BRAIN,
+    "category": "science", "style": "edu",
+    "sub": "The science of sets per week",
+    "stock_keywords": ["gym training sets", "barbell workout volume",
+                       "dumbbell training gym", "focused lifting", "workout tracking notebook"],
+    "hook": "HOW MANY SETS?",
+    "script": (
+        "How many sets should you actually do to grow? Here's what the science says. "
+        "The key number is weekly sets per muscle group. For most people, around ten to twenty hard sets a week is the sweet spot for growth. "
+        "Below about ten, you're probably leaving gains on the table. Far above twenty, you often just dig into your recovery without extra benefit. "
+        "Split those sets across two sessions a week instead of one brutal workout, so each one is high quality. "
+        "And every set has to be hard — close to failure, not just going through the motions. "
+        "Count your weekly sets, keep them in that range, and push each one. "
+        "Follow for training backed by science."
+    ),
+    "hashtags_extra": ["volume", "hypertrophy", "gymscience", "musclegrowth"],
+    "cta": "Follow for training backed by science.",
+},
+{
+    "key": "science_failure", "label": "Should You Train to Failure", "emoji": BRAIN,
+    "category": "science", "style": "edu",
+    "sub": "The science of training to failure",
+    "stock_keywords": ["intense lifting gym", "last rep struggle gym",
+                       "spotter helping lift", "focused training failure", "heavy set gym"],
+    "hook": "TRAIN TO FAILURE?",
+    "script": (
+        "Should you train every set to failure? Here's the science. "
+        "Training to failure means doing reps until you physically can't do another. It does build muscle — but it's not free. "
+        "Going to failure on every set, especially heavy compounds like squats and deadlifts, beats up your recovery and your joints, so your next sessions suffer. "
+        "The smart approach: leave one or two reps in the tank on most sets. You get almost all the growth with far less fatigue. "
+        "Save true failure for safer isolation moves, like curls or pushdowns, and only now and then. "
+        "Hard, but not destroyed, every session. "
+        "Follow for training backed by science."
+    ),
+    "hashtags_extra": ["trainingtofailure", "hypertrophy", "gymscience", "recovery"],
+    "cta": "Follow for training backed by science.",
+},
+{
+    "key": "compare_freeweights", "label": "Free Weights vs Machines", "emoji": BRAIN,
+    "category": "science", "style": "edu",
+    "sub": "Which builds more muscle?",
+    "stock_keywords": ["dumbbell free weights gym", "weight machine gym",
+                       "barbell training gym", "cable machine workout", "gym equipment"],
+    "hook": "WEIGHTS VS MACHINES",
+    "script": (
+        "Free weights versus machines — which builds more muscle? The answer: both, and you should use both. "
+        "Free weights, like barbells and dumbbells, let you load heavy and work more muscles and stabilizers at once. They're the backbone of any program. "
+        "Machines lock you into a path, so you can really target a muscle, push close to failure safely without a spotter, and keep going when you're tired. "
+        "The science is clear: muscle grows from effort and progressive overload, not from the type of equipment. "
+        "So build your workouts around free-weight basics, then use machines to add volume and finish muscles off. "
+        "It was never one or the other. "
+        "Follow for training backed by science."
+    ),
+    "hashtags_extra": ["freeweights", "machines", "gymscience", "musclegrowth"],
+    "cta": "Follow for training backed by science.",
+},
+{
+    "key": "compare_cardio", "label": "HIIT vs Steady Cardio", "emoji": RUN,
+    "category": "science", "style": "edu",
+    "sub": "Which burns more fat?",
+    "stock_keywords": ["hiit training intense", "person walking incline",
+                       "sprint running athlete", "treadmill steady cardio", "cycling gym"],
+    "hook": "HIIT VS CARDIO",
+    "script": (
+        "HIIT versus steady cardio for fat loss — which wins? Here's the truth: the best one is the one you'll actually keep doing. "
+        "HIIT is short, intense intervals. It burns a lot in little time and keeps your metabolism up afterward, but it's tough and hard to recover from if you do too much. "
+        "Steady cardio, like a brisk walk or easy bike ride, burns fewer calories per minute but is easy to recover from, so you can do it often without hurting your lifting. "
+        "For fat loss, total calories burned over the week is what matters. "
+        "So do a little HIIT two or three times a week, and fill the rest with easy steps. "
+        "Follow for training backed by science."
+    ),
+    "hashtags_extra": ["hiit", "cardio", "fatloss", "gymscience"],
+    "cta": "Follow for training backed by science.",
+},
+{
+    "key": "split_ppl", "label": "Push Pull Legs Explained", "emoji": BOLT,
+    "category": "workout", "style": "edu",
+    "sub": "The best split for most people",
+    "stock_keywords": ["gym workout split", "push day chest gym",
+                       "pull day back gym", "leg day squat", "full gym training"],
+    "hook": "PUSH PULL LEGS",
+    "script": (
+        "Push, pull, legs — the simplest, most effective split for building muscle. Here's how it works. "
+        "On push day, you train everything that pushes: chest, shoulders, and triceps. "
+        "On pull day, you train everything that pulls: back and biceps. "
+        "On leg day, you hit quads, hamstrings, glutes, and calves. "
+        "Run it three days a week for a solid routine, or six days to hit every muscle twice a week for faster growth. "
+        "Pick one or two big lifts per session, add a couple of isolation moves, and get stronger over time. "
+        "Simple, balanced, and it works at every level. "
+        "Follow for smart, simple training."
+    ),
+    "hashtags_extra": ["pushpulllegs", "ppl", "workoutsplit", "fitnessplan"],
+    "cta": "Follow for smart, simple training.",
+},
+{
+    "key": "split_upperlower", "label": "Upper Lower Split Explained", "emoji": BOLT,
+    "category": "workout", "style": "edu",
+    "sub": "Train 4 days a week",
+    "stock_keywords": ["upper body workout gym", "lower body squat gym",
+                       "gym training split", "dumbbell workout", "barbell training"],
+    "hook": "UPPER / LOWER",
+    "script": (
+        "The upper-lower split is perfect if you can train about four days a week. Here's how it works. "
+        "On upper days, you train your whole upper body: chest, back, shoulders, and arms. "
+        "On lower days, you train your whole lower body: quads, hamstrings, glutes, and calves. "
+        "Run it four days a week — two upper, two lower — and every muscle gets trained twice, which is the sweet spot for growth. "
+        "Lead each session with a big compound lift, then add isolation work, and add a little weight or a rep each week. "
+        "It's a great middle ground between full-body and a six-day split. "
+        "Follow for smart, simple training."
+    ),
+    "hashtags_extra": ["upperlower", "workoutsplit", "fitnessplan", "gymroutine"],
+    "cta": "Follow for smart, simple training.",
+},
+{
+    "key": "situation_busy", "label": "Train on a Busy Schedule", "emoji": CLOCK,
+    "category": "workout", "style": "edu",
+    "sub": "Build muscle in 30 minutes",
+    "stock_keywords": ["quick gym workout", "efficient training gym",
+                       "compound lift gym", "busy person workout", "dumbbell quick workout"],
+    "hook": "NO TIME? NO EXCUSE",
+    "script": (
+        "No time to train? You can still build muscle in thirty minutes if you train smart. "
+        "First, skip the fluff and build your session around big compound lifts. A squat, a press, and a row work dozens of muscles at once. "
+        "Second, use supersets: pair two exercises for opposite muscles, like a push and a pull, and do them back to back with little rest. "
+        "Third, keep your rest short but your effort high — push each set close to failure. "
+        "Three or four hard sessions like this a week is plenty to grow. "
+        "Consistency beats a perfect two-hour workout you never have time for. "
+        "Follow for training that fits real life."
+    ),
+    "hashtags_extra": ["busyworkout", "quickworkout", "gymtips", "efficient"],
+    "cta": "Follow for training that fits real life.",
+},
+{
+    "key": "situation_hardgainer", "label": "Skinny Guy Muscle Guide", "emoji": BOLT,
+    "category": "workout", "style": "edu",
+    "sub": "How hardgainers build muscle",
+    "stock_keywords": ["skinny guy gym workout", "beginner lifting gym",
+                       "eating big meal", "compound lift gym", "progress gym training"],
+    "hook": "SKINNY GUY FIX",
+    "script": (
+        "If you're a skinny guy who can't seem to gain, here's what you're getting wrong. "
+        "First, you're not eating enough. To grow, you have to eat more calories than you burn — add a few hundred a day and track it, because you probably eat less than you think. "
+        "Second, you're spreading yourself thin with endless exercises. Focus on the big basics: squats, presses, rows, and pulls, and get stronger on them. "
+        "Third, you're not recovering. Sleep seven to nine hours and don't train the same muscle every day. "
+        "Eat big, lift heavy on the basics, sleep well, and be patient. "
+        "The scale and the mirror will move. "
+        "Follow for training that actually works."
+    ),
+    "hashtags_extra": ["hardgainer", "skinnytomuscle", "bulking", "musclegain"],
+    "cta": "Follow for training that actually works.",
+},
+{
+    "key": "diet_creatine", "label": "Does Creatine Work", "emoji": MEAT,
+    "category": "diet", "style": "edu",
+    "sub": "The one supplement worth taking",
+    "stock_keywords": ["creatine scoop supplement", "protein shake gym",
+                       "healthy supplement water", "gym nutrition", "water bottle gym"],
+    "hook": "CREATINE 101",
+    "script": (
+        "Creatine is the most researched supplement in fitness, and yes, it actually works. Here's what you need to know. "
+        "Creatine helps your muscles produce energy for short, hard efforts, so you can squeeze out a few more reps and lift a little heavier. Over time, that extra work means more muscle and strength. "
+        "It also pulls water into your muscle cells, which can make you look a bit fuller. "
+        "Take three to five grams a day, every day — timing doesn't matter, so just be consistent. You don't need to load or cycle it. "
+        "It's cheap, safe for healthy people, and one of the few supplements truly worth your money. "
+        "Follow for nutrition that actually works."
+    ),
+    "hashtags_extra": ["creatine", "supplements", "nutrition", "gymtips"],
+    "cta": "Follow for nutrition that actually works.",
+},
+{
+    "key": "diet_vegprotein", "label": "High-Protein Veg Foods", "emoji": BROC,
+    "category": "diet", "style": "edu",
+    "sub": "Hit your protein without meat",
+    "stock_keywords": ["paneer healthy food", "lentils dal bowl",
+                       "chickpeas healthy meal", "greek yogurt bowl", "tofu healthy plate"],
+    "hook": "VEG PROTEIN FIX",
+    "script": (
+        "Think you can't hit your protein on a vegetarian diet? Here are the best high-protein veg foods. "
+        "Paneer and Greek yogurt are excellent — high in protein and easy to add to any meal. "
+        "Lentils, chickpeas, rajma, and other dals give you protein plus fiber, and they're cheap and filling. "
+        "Tofu and soya chunks are protein powerhouses — soya chunks are one of the highest-protein foods you can buy. "
+        "Add milk, a scoop of whey or a plant protein, and some nuts and seeds, and hitting your target is easy. "
+        "Build each meal around one of these and spread your protein across the day. "
+        "Follow for nutrition made simple."
+    ),
+    "hashtags_extra": ["vegetarianprotein", "protein", "nutrition", "vegdiet"],
+    "cta": "Follow for nutrition made simple.",
+},
 ]
 
 # --- Paths ---
